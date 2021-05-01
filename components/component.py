@@ -9,11 +9,6 @@ class Component(ABC):
     def status(self):
         return self._status
 
-    @status.setter
-    def status(self, val):
-        error.checkType(val, bool, 'status must be a boolean!')
-        self._status = val
-
     @abstractmethod
     def __init__(self):
         pass
@@ -26,10 +21,7 @@ class Component(ABC):
     def cleanup(self):
         pass
 
-    @abstractmethod
-    def on(self):
-        pass
-
-    @abstractmethod
-    def off(self):
-        pass
+    @status.setter
+    def status(self, val):
+        error.checkType(val, bool, 'status must be a boolean!')
+        self._status = val
