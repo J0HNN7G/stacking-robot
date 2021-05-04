@@ -3,6 +3,7 @@
 import error
 from abc import ABC, abstractmethod
 
+
 class Component(ABC):
     """
     An abstract class for the hardware components of the robot.

@@ -4,6 +4,7 @@ import error
 import component
 import RPi.GPIO as GPIO
 
+
 class Motor(component.Component):
     """A class for controlling the wheel motors of the robot."""
 
@@ -71,11 +72,11 @@ class Motor(component.Component):
         :param backwardPin: GPIO number of pin controlling backward motion
         :param forwardPin: GPIO number of pin controlling forward motion
         """
-        status(False)
-        radius(radius)
-        enginePin(enginePin)
-        backwardPin(backwardPin)
-        forwardPin(forwardPin)
+        self.status(False)
+        self.radius(radius)
+        self.enginePin(enginePin)
+        self.backwardPin(backwardPin)
+        self.forwardPin(forwardPin)
 
     def setup(self):
         # type: None -> None
@@ -85,36 +86,36 @@ class Motor(component.Component):
         GPIO.setwarnings(False)
         # Set to GPIO numbering
         GPIO.setmode(GPIO.BCM)
-        GPIO.setup(enginePin(), GPIO.OUT)
-    	GPIO.setup(backwardPin(), GPIO.OUT)
-    	GPIO.setup(forwardPin(), GPIO.OUT)
+        GPIO.setup(self.enginePin(), GPIO.OUT)
+        GPIO.setup(self.backwardPin(), GPIO.OUT)
+        GPIO.setup(self.forwardPin(), GPIO.OUT)
 
-        stop()
+        self.stop()
         try:
             # Create PWM instance and output
-            pwm(GPIO.PWM(enginePin(), STD_FREQ))
-            status(True)
+            self.pwm(GPIO.PWM(self.enginePin(), STD_FREQ))
+            self.status(True)
         except Exception as e:
             print(e)
-            cleanup()
+            self.cleanup()
 
     def cleanup(self):
         # type: None -> None
         """
         Cleanup the motor.
         """
-        stop()
-        GPIO.cleanup([enginePin(), backwardPin(), forwardPin()])
-        status(False)
+        self.stop()
+        GPIO.cleanup([self.enginePin(), self.backwardPin(), self.forwardPin()])
+        self.status(False)
 
     def stop(self):
         # type: None -> None
         """
         Stop the motor.
         """
-        GPIO.output(enginePin(), GPIO.LOW)
-        GPIO.output(backwardPin(), GPIO.LOW)
-        GPIO.output(forwardPin(), GPIO.LOW)
+        GPIO.output(self.enginePin(), GPIO.LOW)
+        GPIO.output(self.backwardPin(), GPIO.LOW)
+        GPIO.output(self.forwardPin(), GPIO.LOW)
 
     @pwm.setter
     def pwm(self, val):
