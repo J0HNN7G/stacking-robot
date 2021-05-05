@@ -5,9 +5,8 @@ from abc import ABC, abstractmethod
 
 
 class Component(ABC):
-    """
-    An abstract class for the hardware components of the robot.
-    """
+    """An abstract class for the hardware components of the robot."""
+
 
     @property
     def status(self):
@@ -19,11 +18,13 @@ class Component(ABC):
         """
         return self._status
 
+
     @abstractmethod
     def __init__(self):
         # type: (...) -> (...)
         """Initialise the component."""
         pass
+
 
     @abstractmethod
     def setup(self):
@@ -31,11 +32,13 @@ class Component(ABC):
         """Setup the component."""
         pass
 
+
     @abstractmethod
     def cleanup(self):
         # type: (...) -> (...)
         """Cleanup the component."""
         pass
+
 
     @status.setter
     def status(self, val):
