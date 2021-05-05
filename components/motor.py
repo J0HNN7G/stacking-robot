@@ -13,10 +13,10 @@ class Motor(component.Component):
     STD_FREQ = 1000
 
     # Minimum GPIO numbering value.
-    GPIO_PIN_MIN = 4
+    GPIO_PIN_MIN = 1
 
     # Maximum GPIO numbering value.
-    GPIO_PIN_MAX = 26
+    GPIO_PIN_MAX = 27
 
 
     def __init__(self, radius, enginePin, backwardPin, forwardPin):
