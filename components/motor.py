@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import error
-from component
+import component
 import RPi.GPIO as GPIO
 
 
@@ -45,9 +45,7 @@ class Motor(component.Component):
         GPIO.setwarnings(False)
         # Set to GPIO numbering
         GPIO.setmode(GPIO.BCM)
-        GPIO.setup(self.enginePin(), GPIO.OUT)
-        GPIO.setup(self.backwardPin(), GPIO.OUT)
-        GPIO.setup(self.forwardPin(), GPIO.OUT)
+        GPIO.setup(self._pins(), GPIO.OUT)
 
         self.stop()
         try:
@@ -65,7 +63,7 @@ class Motor(component.Component):
         Cleanup the motor.
         """
         self.stop()
-        GPIO.cleanup([self.enginePin(), self.backwardPin(), self.forwardPin()])
+        GPIO.cleanup(self._pins())
         self._status(False)
 
 
@@ -74,9 +72,8 @@ class Motor(component.Component):
         """
         Stop the motor.
         """
-        GPIO.output(self.enginePin(), GPIO.LOW)
-        GPIO.output(self.backwardPin(), GPIO.LOW)
-        GPIO.output(self.forwardPin(), GPIO.LOW)
+        self.pwm().stop()
+        GPIO.output(self._pins(), GPIO.LOW)
 
 
     def pwm(self):
@@ -127,6 +124,16 @@ class Motor(component.Component):
         :return: GPIO number of pin controlling the forward motion
         """
         return self._forwardPin
+
+
+    def _pins(self):
+        # type: None -> [int]
+        """
+        Get a list of the pins
+
+        :return: list of enginePin, forwardPin and backwardPin
+        """
+        return [self.enginePin(), self.backwardPin(), self.forwardPin()]
 
 
     def _pwm(self, val):

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 
 
 def checkType(val, type, msg):
@@ -38,4 +39,3 @@ def checkInRange(val, minVal, maxVal):
     """
     if (minVal > val) || (val > maxVal):
         raise ValueError(f'Expected {minVal} <= value <= {maxVal}, but value: {val}')
-        

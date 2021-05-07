@@ -1,77 +1,79 @@
 # -*- coding: utf-8 -*-
 
-from motor import Motor
-import RPi.GPIO as GPIO
 import time
+import RPi.GPIO as GPIO
+
 
 class Move:
     """A class for controlling the movement of the robot."""
 
 
-    SPEED_TO_FREQ = 1
+    DC_TO_SPEED
+
+    # The motors' minimum duty cycle.
+    MIN_DC = 20
+
+    # The motors' maximum duty cycle.
+    MAX_DC = 100
 
 
-    @property
-    def speed(self):
-        return self._speed
+    def __init__(self, dc, leftMotor, rightMotor):
+        # type: (float, Motor, Motor) -> None
+        """
+        Initialise both motors with a given duty cycle.
+
+        :param self: the radius of the motor's wheel in millimetres
+        :param dc: GPIO number of pin controlling motor engine
+        :param leftMotor: GPIO number of pin controlling backward motion
+        :param rightMotor: GPIO number of pin controlling forward motion
+        """
+        self.dc(dc)
+        self._leftMotor(leftMotor)
+        self._rightMotor(rightMotor)
 
 
-    @property
-    def leftMotor(self):
-        return self._leftMotor
-
-
-    @property
-    def rightMotor(self):
-        return self._rightMotor
-
-
-    def __init__(self, speed, leftMotor, rightMotor):
-        self.speed(speed)
-        self.leftMotor(leftMotor)
-        self.rightMotor(rightMotor)
-
-
-    def move(self, dist):
-        duration = abs(dist)/self.speed()
+    def moveDuration(self, duration):
         if dist > 0:
-            GPIO.output(self.leftMotor.backwardPin(), GPIO.LOW)
-            GPIO.output(self.leftMotor.forwardPin(), GPIO.HIGH)
-            self.leftMotor.pwm().start(0)
-            self.leftMotor.pwm().ChangeDutyCycle(self.speed())
-
-            GPIO.output(self.rightMotor.backwardPin(), GPIO.LOW)
-            GPIO.output(self.rightMotor.forwardPin(), GPIO.HIGH)
-            self.rightMotor.pwm().start(0)
-            self.rightMotor.pwm().ChangeDutyCycle(self.speed())
+            GPIO.output([self.leftMotor.backwardPin(), self.rightMotor.backwardPin()], GPIO.LOW)
+            GPIO.output([self.leftMotor.forwardPin(), self.rightMotor.forwardPin()], GPIO.HIGH)
+            self.leftMotor.pwm().start(self.dc())
+            self.rightMotor.pwm().start(self.dc())
         elif dist < 0:
-            GPIO.output(self.leftMotor.forwardPin(), GPIO.LOW)
-            GPIO.output(self.leftMotor.backwardPin(), GPIO.HIGH)
-            self.leftMotor.pwm().start(100)
-            self.leftMotor.pwm().ChangeDutyCycle(self.speed())
+            GPIO.output([self.leftMotor.forwardPin(), self.rightMotor.forwardPin()], GPIO.LOW)
+            GPIO.output([self.leftMotor.backwardPin(), self.rightMotor.backwardPin()], GPIO.HIGH)
 
-            GPIO.output(self.rightMotor.forwardPin(), GPIO.LOW)
-            GPIO.output(self.rightMotor.backwardPin(), GPIO.HIGH)
-            self.rightMotor.pwm().start(100)
-            self.rightMotor.pwm().ChangeDutyCycle(self.speed())
-        else:
-            pass
+        self.leftMotor.pwm().start(self.dc())
+        self.rightMotor.pwm().start(self.dc())
 
         time.sleep(duration)
+
         self.leftMotor.stop()
         self.rightMotor.stop()
 
 
-    @speed.setter
-    def speed(self, val):
-        self._speed = val
+    @property
+    def dc(self):
+        return self._dc
 
 
-    @leftMotor.setter
-    def leftMotor(self, val):
+    @dc.setter
+    def dc(self, val):
+        error.checkType(val, float, 'dc must be a float!')
+        error.checkInRange(val, MIN_DC, MAX_DC)
+        self._dc = val
+
+
+    def leftMotor(self):
+        return self._leftMotor
+
+
+    def rightMotor(self):
+        return self._rightMotor
+
+
+    def _leftMotor(self, val):
         self._leftMotor = val
 
 
-    @rightMotor.setter
-    def rightMotor(self, val):
+    def _rightMotor(self, val):
         self._rightMotor = val
