@@ -18,8 +18,11 @@ class Motor(component.Component):
     # Maximum GPIO numbering value.
     GPIO_PIN_MAX = 27
 
+    # Standard radius (?)
+    STD_RADIUS = 0.6
 
-    def __init__(self, radius, enginePin, backwardPin, forwardPin):
+
+    def __init__(self, enginePin, backwardPin, forwardPin, radius = STD_RADIUS):
         # type: (float, int, int, int) -> None
         """
         Initialise a motor with the radius of the wheel it spins and the
@@ -50,7 +53,7 @@ class Motor(component.Component):
         self.stop()
         try:
             # Create PWM instance and output
-            self.pwm(GPIO.PWM(self.enginePin(), STD_FREQ))
+            self.pwm(GPIO.PWM(self.enginePin(), self.STD_FREQ))
             self._status(True)
         except Exception as e:
             print(e)
@@ -172,7 +175,7 @@ class Motor(component.Component):
         :raise ValueError: if val is outside of GPIO numbering range
         """
         error.checkType(val, int, 'enginePin must be an int!')
-        error.checkInRange(val, GPIO_PIN_MIN, GPIO_PIN_MAX)
+        error.checkInRange(val, self.GPIO_PIN_MIN, self.GPIO_PIN_MAX)
         self._enginePin = val
 
 
@@ -186,7 +189,7 @@ class Motor(component.Component):
         :raise ValueError: if val is outside of GPIO numbering range
         """
         error.checkType(val, int, 'backwardPin must be an int!')
-        error.checkInRange(val, GPIO_PIN_MIN, GPIO_PIN_MAX)
+        error.checkInRange(val, self.GPIO_PIN_MIN, self.GPIO_PIN_MAX)
         self._backwardPin = val
 
 
@@ -200,5 +203,5 @@ class Motor(component.Component):
         :raise ValueError: if val is outside of GPIO numbering range
         """
         error.checkType(val, int, 'forwardPin must be an int!')
-        error.checkInRange(val, GPIO_PIN_MIN, GPIO_PIN_MAX)
+        error.checkInRange(val, self.GPIO_PIN_MIN, self.GPIO_PIN_MAX)
         self._forwardPin = val
