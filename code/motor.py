@@ -89,6 +89,7 @@ class Motor(Component):
         :param backwardPin: GPIO number of pin controlling backward motion
         :param forwardPin: GPIO number of pin controlling forward motion
         """
+        super(Motor, self).__init__()
         self.status(False)
         self.radius(radius)
         self.enginePin(enginePin)
