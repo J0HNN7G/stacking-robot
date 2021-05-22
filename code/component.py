@@ -16,7 +16,7 @@ class Component(ABC):
 
         :return: true if the component is on, false if if it is off
         """
-        return self._status
+        return self.status
 
 
     @abstractmethod
@@ -50,4 +50,4 @@ class Component(ABC):
         :raise TypeError: if val is not a bool
         """
         error.checkType(status_val, bool, 'status must be a boolean!')
-        self._status = status_val
+        self.status = status_val
