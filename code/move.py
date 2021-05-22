@@ -19,6 +19,7 @@ class Move:
     # The motors' maximum duty cycle.
     MAX_DC = 100
 
+
     def __init__(self, dc, leftMotor, rightMotor):
         # type: (float, Motor, Motor) -> None
         """
@@ -29,8 +30,9 @@ class Move:
         :param rightMotor: GPIO number of pin controlling forward motion
         """
         self.dc(dc)
-        self._leftMotor(leftMotor)
-        self._rightMotor(rightMotor)
+        self.leftMotor(leftMotor)
+        self.rightMotor(rightMotor)
+
 
     def moveDuration(self, duration, direction):
         # type: (float, Direction) -> None
@@ -45,19 +47,20 @@ class Move:
         error.checkComponent(self.rightMotor(), "Right motor")
 
         if direction is Direction.FORWARD:
-            GPIO.output([self.leftMotor.backwardPin(), self.rightMotor.backwardPin()], GPIO.LOW)
-            GPIO.output([self.leftMotor.forwardPin(), self.rightMotor.forwardPin()], GPIO.HIGH)
+            GPIO.output([self.leftMotor().backwardPin(), self.rightMotor().backwardPin()], GPIO.LOW)
+            GPIO.output([self.leftMotor().forwardPin(), self.rightMotor().forwardPin()], GPIO.HIGH)
         elif direction is Direction.BACKWARD:
-            GPIO.output([self.leftMotor.forwardPin(), self.rightMotor.forwardPin()], GPIO.LOW)
-            GPIO.output([self.leftMotor.backwardPin(), self.rightMotor.backwardPin()], GPIO.HIGH)
+            GPIO.output([self.leftMotor().forwardPin(), self.rightMotor().forwardPin()], GPIO.LOW)
+            GPIO.output([self.leftMotor().backwardPin(), self.rightMotor().backwardPin()], GPIO.HIGH)
 
-        self.leftMotor.pwm().start(self.dc())
-        self.rightMotor.pwm().start(self.dc())
+        self.leftMotor().pwm().start(self.dc())
+        self.rightMotor().pwm().start(self.dc())
 
         time.sleep(duration)
 
-        self.leftMotor.stop()
-        self.rightMotor.stop()
+        self.leftMotor().stop()
+        self.rightMotor().stop()
+
 
     @property
     def dc(self):
@@ -66,6 +69,25 @@ class Move:
         Get the duty cycle.
         """
         return self._dc
+
+
+    @property
+    def leftMotor(self):
+        # type: None -> Motor
+        """
+        Get the left motor.
+        """
+        return self._leftMotor
+
+
+    @property
+    def rightMotor(self):
+        # type: None -> Motor
+        """
+        Get the right motor.
+        """
+        return self._rightMotor
+
 
     @dc.setter
     def dc(self, dc_val):
@@ -81,21 +103,9 @@ class Move:
         error.checkInRange(dc_val, self.MIN_DC, self.MAX_DC)
         self._dc = dc_val
 
-    def leftMotor(self):
-        # type: None -> Motor
-        """
-        Get the left motor.
-        """
-        return self._leftMotor
 
-    def rightMotor(self):
-        # type: None -> Motor
-        """
-        Get the right motor.
-        """
-        return self._rightMotor
-
-    def _leftMotor(self, leftMotor):
+    @leftMotor.setter
+    def leftMotor(self, leftMotor):
         # type: Motor -> None
         """
         Set the left motor.
@@ -109,7 +119,9 @@ class Move:
             leftMotor.setup()
         self._leftMotor = leftMotor
 
-    def _rightMotor(self, rightMotor):
+
+    @rightMotor.setter
+    def rightMotor(self, rightMotor):
         # type: Motor -> None
         """
         Set the right motor.

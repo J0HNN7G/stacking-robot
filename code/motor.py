@@ -34,11 +34,11 @@ class Motor(component.Component):
         :param backwardPin: GPIO number of pin controlling backward motion
         :param forwardPin: GPIO number of pin controlling forward motion
         """
-        self._status(False)
-        self._radius(radius)
-        self._enginePin(enginePin)
-        self._backwardPin(backwardPin)
-        self._forwardPin(forwardPin)
+        self.status(False)
+        self.radius(radius)
+        self.enginePin(enginePin)
+        self.backwardPin(backwardPin)
+        self.forwardPin(forwardPin)
 
 
     def setup(self):
@@ -49,13 +49,13 @@ class Motor(component.Component):
         GPIO.setwarnings(False)
         # Set to GPIO numbering
         GPIO.setmode(GPIO.BCM)
-        GPIO.setup(self._pins(), GPIO.OUT)
+        GPIO.setup(self.pins(), GPIO.OUT)
 
         self.stop()
         try:
             # Create PWM instance and output
-            self._pwm(GPIO.PWM(self.enginePin(), self.STD_FREQ))
-            self._status(True)
+            self.pwm(GPIO.PWM(self.enginePin(), self.STD_FREQ))
+            self.status(True)
         except Exception as e:
             print(e)
             self.cleanup()
@@ -67,8 +67,8 @@ class Motor(component.Component):
         Cleanup the motor.
         """
         self.stop()
-        GPIO.cleanup(self._pins())
-        self._status(False)
+        GPIO.cleanup(self.pins())
+        self.status(False)
 
 
     def stop(self):
@@ -77,9 +77,10 @@ class Motor(component.Component):
         Stop the motor.
         """
         self.pwm().stop()
-        GPIO.output(self._pins(), GPIO.LOW)
+        GPIO.output(self.pins(), GPIO.LOW)
 
 
+    @property
     def pwm(self):
         # type: None -> GPIO.PWM
         """
@@ -90,6 +91,7 @@ class Motor(component.Component):
         return self._pwm
 
 
+    @property
     def radius(self):
         # type: None -> bool
         """
@@ -100,6 +102,7 @@ class Motor(component.Component):
         return self._radius
 
 
+    @property
     def enginePin(self):
         # type: None -> int
         """
@@ -110,6 +113,7 @@ class Motor(component.Component):
         return self._enginePin
 
 
+    @property
     def backwardPin(self):
         # type: None -> int
         """
@@ -120,6 +124,7 @@ class Motor(component.Component):
         return self._backwardPin
 
 
+    @property
     def forwardPin(self):
         # type: None -> int
         """
@@ -130,7 +135,7 @@ class Motor(component.Component):
         return self._forwardPin
 
 
-    def _pins(self):
+    def pins(self):
         # type: None -> [int]
         """
         Get a list of the pins
@@ -140,7 +145,8 @@ class Motor(component.Component):
         return [self.enginePin(), self.backwardPin(), self.forwardPin()]
 
 
-    def _pwm(self, pwm):
+    @pwm.setter
+    def pwm(self, pwm):
         # type: (GPIO.PWM) -> None
         """
         Set the PWM instance controlling the motor engine.
@@ -152,7 +158,8 @@ class Motor(component.Component):
         self._pwm = pwm
 
 
-    def _radius(self, radius):
+    @radius.setter
+    def radius(self, radius):
         # type: (float) -> None
         """
         Set the radius of the motor's wheel.
@@ -166,7 +173,8 @@ class Motor(component.Component):
         self._radius = radius
 
 
-    def _enginePin(self, enginePin):
+    @enginePin.setter
+    def enginePin(self, enginePin):
         # type: (int) -> None
         """
         Set the GPIO number of pin controlling motor engine.
@@ -180,7 +188,8 @@ class Motor(component.Component):
         self._enginePin = enginePin
 
 
-    def _backwardPin(self, backwardPin):
+    @backwardPin.setter
+    def backwardPin(self, backwardPin):
         # type: (int) -> None
         """
         Set the GPIO number of pin controlling backward motion.
@@ -194,7 +203,8 @@ class Motor(component.Component):
         self._backwardPin = backwardPin
 
 
-    def _forwardPin(self, forwardPin):
+    @forwardPin.setter
+    def forwardPin(self, forwardPin):
         # type: (int) -> None
         """
         Set the GPIO number of pin controlling forward motion
