@@ -31,7 +31,7 @@ class Motor(component.Component):
 
         :return: PWM instance controlling the motor engine
         """
-        return self._pwm
+        return self.pwm
 
 
     @property
@@ -42,7 +42,7 @@ class Motor(component.Component):
 
         :return: the radius of the motor's wheel in millimetres
         """
-        return self._radius
+        return self.radius
 
 
     @property
@@ -53,7 +53,7 @@ class Motor(component.Component):
 
         :return: GPIO number of pin controlling the motor engine
         """
-        return self._enginePin
+        return self.enginePin
 
 
     @property
@@ -64,7 +64,7 @@ class Motor(component.Component):
 
         :return: GPIO number of pin controlling the backward motion
         """
-        return self._backwardPin
+        return self.backwardPin
 
 
     @property
@@ -75,7 +75,7 @@ class Motor(component.Component):
 
         :return: GPIO number of pin controlling the forward motion
         """
-        return self._forwardPin
+        return self.forwardPin
 
 
     def __init__(self, enginePin, backwardPin, forwardPin, radius = STD_RADIUS):
@@ -155,7 +155,7 @@ class Motor(component.Component):
         :raise TypeError: if val is not 'GPIO.PWM'
         """
         error.checkType(pwm, GPIO.PWM, 'pwm must be of type GPIO.PWM!')
-        self._pwm = pwm
+        self.pwm = pwm
 
 
     @radius.setter
@@ -170,7 +170,7 @@ class Motor(component.Component):
         """
         error.checkType(radius, float, 'radius must be a float!')
         error.checkPositive(radius)
-        self._radius = radius
+        self.radius = radius
 
 
     @enginePin.setter
@@ -185,7 +185,7 @@ class Motor(component.Component):
         """
         error.checkType(enginePin, int, 'enginePin must be an int!')
         error.checkInRange(enginePin, self.GPIO_PIN_MIN, self.GPIO_PIN_MAX)
-        self._enginePin = enginePin
+        self.enginePin = enginePin
 
 
     @backwardPin.setter
@@ -200,7 +200,7 @@ class Motor(component.Component):
         """
         error.checkType(backwardPin, int, 'backwardPin must be an int!')
         error.checkInRange(backwardPin, self.GPIO_PIN_MIN, self.GPIO_PIN_MAX)
-        self._backwardPin = backwardPin
+        self.backwardPin = backwardPin
 
 
     @forwardPin.setter
@@ -215,4 +215,4 @@ class Motor(component.Component):
         """
         error.checkType(forwardPin, int, 'forwardPin must be an int!')
         error.checkInRange(forwardPin, self.GPIO_PIN_MIN, self.GPIO_PIN_MAX)
-        self._forwardPin = forwardPin
+        self.forwardPin = forwardPin

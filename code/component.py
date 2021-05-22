@@ -16,7 +16,7 @@ class Component():
 
         :return: true if the component is on, false if if it is off
         """
-        return self._status
+        return self.status
 
 
     def __init__(self):
