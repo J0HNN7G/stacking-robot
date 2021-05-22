@@ -22,7 +22,7 @@ class Component():
     def __init__(self):
         # type: (...) -> (...)
         """Initialise the component."""
-        pass
+        self.status(False)
 
 
     def setup(self):
