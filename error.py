@@ -30,12 +30,25 @@ def checkPositive(val):
 def checkInRange(val, minVal, maxVal):
     # (number, number, number) -> (None || ValueError)
     """
-    Check if the given value is between a minimum and maximum value (inclusive)
+    Check if the given value is between a minimum and maximum value (inclusive).
 
     :param val: a number
     :param minVal: minimum allowed value
     :param maxVal: maximum allowed value
     :raise ValueError: if val less than minVal or larger than maxVal
     """
-    if (minVal > val) || (val > maxVal):
+    if (minVal > val) or (val > maxVal):
         raise ValueError(f'Expected {minVal} <= value <= {maxVal}, but value: {val}')
+
+
+def checkComponent(component, component_name):
+    # (bool, string) -> (None || ValueError)
+    """
+    Check if the component is on.
+
+    :param component: component
+    :param component_name: name of the component
+    :raise ValueError: if status is False
+    """
+    if not component.status():
+        raise ValueError(component_name + ' is off')

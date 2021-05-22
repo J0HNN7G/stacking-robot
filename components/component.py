@@ -41,13 +41,13 @@ class Component(ABC):
 
 
     @status.setter
-    def status(self, val):
+    def status(self, status_val):
         # type: bool -> None
         """
         Set the status of the component (on/off).
 
-        :param val: true if component is on, false if it is off
+        :param status_val: true if component is on, false if it is off
         :raise TypeError: if val is not a bool
         """
-        error.checkType(val, bool, 'status must be a boolean!')
-        self._status = val
+        error.checkType(status_val, bool, 'status must be a boolean!')
+        self._status = status_val
