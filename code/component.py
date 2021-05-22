@@ -8,17 +8,6 @@ class Component():
     """An abstract class for the hardware components of the robot."""
 
 
-    @property
-    def status(self):
-        # type: None -> bool
-        """
-        Get the status of the component (on/off).
-
-        :return: true if the component is on, false if if it is off
-        """
-        return self._status
-
-
     def __init__(self):
         # type: (...) -> (...)
         """Initialise the component."""
@@ -35,6 +24,17 @@ class Component():
         # type: (...) -> (...)
         """Cleanup the component."""
         pass
+
+
+    @property
+    def status(self):
+        # type: None -> bool
+        """
+        Get the status of the component (on/off).
+
+        :return: true if the component is on, false if if it is off
+        """
+        return self._status
 
 
     @status.setter
