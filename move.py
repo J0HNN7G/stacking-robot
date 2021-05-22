@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import error
-from components.motor import Motor
+from motor import Motor
 from direction import Direction
 import time
 import RPi.GPIO as GPIO
