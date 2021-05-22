@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
 import error
-import component
+from component import Component
 
 import RPi.GPIO as GPIO
 
 
-class Motor(component.Component):
+class Motor(Component):
     """A class for controlling the wheel motors of the robot."""
 
 
