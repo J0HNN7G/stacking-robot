@@ -26,7 +26,7 @@ class Move:
         """
         Get the duty cycle.
         """
-        return self.dc
+        return self._dc
 
 
     @property
@@ -35,7 +35,7 @@ class Move:
         """
         Get the left motor.
         """
-        return self.leftMotor
+        return self._leftMotor
 
 
     @property
@@ -44,7 +44,7 @@ class Move:
         """
         Get the right motor.
         """
-        return self.rightMotor
+        return self._rightMotor
 
 
     def __init__(self, dc, leftMotor, rightMotor):
@@ -101,7 +101,7 @@ class Move:
         """
         error.checkType(dc_val, float, 'dc must be a float!')
         error.checkInRange(dc_val, self.MIN_DC, self.MAX_DC)
-        self.dc = dc_val
+        self._dc = dc_val
 
 
     @leftMotor.setter
@@ -117,7 +117,7 @@ class Move:
 
         if not leftMotor.status():
             leftMotor.setup()
-        self.leftMotor = leftMotor
+        self._leftMotor = leftMotor
 
 
     @rightMotor.setter
@@ -133,4 +133,4 @@ class Move:
 
         if not rightMotor.status():
             rightMotor.setup()
-        self.rightMotor = rightMotor
+        self._rightMotor = rightMotor

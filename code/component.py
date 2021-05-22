@@ -16,7 +16,7 @@ class Component():
 
         :return: true if the component is on, false if if it is off
         """
-        return self.status
+        return self._status
 
 
     def __init__(self):
@@ -47,4 +47,4 @@ class Component():
         :raise TypeError: if val is not a bool
         """
         error.checkType(status_val, bool, 'status must be a boolean!')
-        self.status = status_val
+        self._status = status_val
