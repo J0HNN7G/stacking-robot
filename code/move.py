@@ -20,6 +20,33 @@ class Move:
     MAX_DC = 100
 
 
+    @property
+    def dc(self):
+        # type: None -> float
+        """
+        Get the duty cycle.
+        """
+        return self._dc
+
+
+    @property
+    def leftMotor(self):
+        # type: None -> Motor
+        """
+        Get the left motor.
+        """
+        return self._leftMotor
+
+
+    @property
+    def rightMotor(self):
+        # type: None -> Motor
+        """
+        Get the right motor.
+        """
+        return self._rightMotor
+
+
     def __init__(self, dc, leftMotor, rightMotor):
         # type: (float, Motor, Motor) -> None
         """
@@ -60,33 +87,6 @@ class Move:
 
         self.leftMotor().stop()
         self.rightMotor().stop()
-
-
-    @property
-    def dc(self):
-        # type: None -> float
-        """
-        Get the duty cycle.
-        """
-        return self._dc
-
-
-    @property
-    def leftMotor(self):
-        # type: None -> Motor
-        """
-        Get the left motor.
-        """
-        return self._leftMotor
-
-
-    @property
-    def rightMotor(self):
-        # type: None -> Motor
-        """
-        Get the right motor.
-        """
-        return self._rightMotor
 
 
     @dc.setter

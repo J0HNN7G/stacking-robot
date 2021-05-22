@@ -4,7 +4,7 @@ import error
 from abc import ABC, abstractmethod
 
 
-class Component(ABC):
+class Component():
     """An abstract class for the hardware components of the robot."""
 
 
@@ -16,24 +16,21 @@ class Component(ABC):
 
         :return: true if the component is on, false if if it is off
         """
-        return self.status
+        return self._status
 
 
-    @abstractmethod
     def __init__(self):
         # type: (...) -> (...)
         """Initialise the component."""
         pass
 
 
-    @abstractmethod
     def setup(self):
         # type: (...) -> (...)
         """Setup the component."""
         pass
 
 
-    @abstractmethod
     def cleanup(self):
         # type: (...) -> (...)
         """Cleanup the component."""

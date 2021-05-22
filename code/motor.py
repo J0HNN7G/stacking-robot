@@ -23,6 +23,61 @@ class Motor(component.Component):
     STD_RADIUS = 0.6
 
 
+    @property
+    def pwm(self):
+        # type: None -> GPIO.PWM
+        """
+        Get the PWM instance controlling the motor engine.
+
+        :return: PWM instance controlling the motor engine
+        """
+        return self._pwm
+
+
+    @property
+    def radius(self):
+        # type: None -> bool
+        """
+        Get the radius of the motor's wheel.
+
+        :return: the radius of the motor's wheel in millimetres
+        """
+        return self._radius
+
+
+    @property
+    def enginePin(self):
+        # type: None -> int
+        """
+        Get the GPIO number of pin controlling the motor engine.
+
+        :return: GPIO number of pin controlling the motor engine
+        """
+        return self._enginePin
+
+
+    @property
+    def backwardPin(self):
+        # type: None -> int
+        """
+        Get the GPIO number of pin controlling the backward motion.
+
+        :return: GPIO number of pin controlling the backward motion
+        """
+        return self._backwardPin
+
+
+    @property
+    def forwardPin(self):
+        # type: None -> int
+        """
+        Get the GPIO number of pin controlling the forward motion.
+
+        :return: GPIO number of pin controlling the forward motion
+        """
+        return self._forwardPin
+
+
     def __init__(self, enginePin, backwardPin, forwardPin, radius = STD_RADIUS):
         # type: (float, int, int, int) -> None
         """
@@ -78,61 +133,6 @@ class Motor(component.Component):
         """
         self.pwm().stop()
         GPIO.output(self.pins(), GPIO.LOW)
-
-
-    @property
-    def pwm(self):
-        # type: None -> GPIO.PWM
-        """
-        Get the PWM instance controlling the motor engine.
-
-        :return: PWM instance controlling the motor engine
-        """
-        return self._pwm
-
-
-    @property
-    def radius(self):
-        # type: None -> bool
-        """
-        Get the radius of the motor's wheel.
-
-        :return: the radius of the motor's wheel in millimetres
-        """
-        return self._radius
-
-
-    @property
-    def enginePin(self):
-        # type: None -> int
-        """
-        Get the GPIO number of pin controlling the motor engine.
-
-        :return: GPIO number of pin controlling the motor engine
-        """
-        return self._enginePin
-
-
-    @property
-    def backwardPin(self):
-        # type: None -> int
-        """
-        Get the GPIO number of pin controlling the backward motion.
-
-        :return: GPIO number of pin controlling the backward motion
-        """
-        return self._backwardPin
-
-
-    @property
-    def forwardPin(self):
-        # type: None -> int
-        """
-        Get the GPIO number of pin controlling the forward motion.
-
-        :return: GPIO number of pin controlling the forward motion
-        """
-        return self._forwardPin
 
 
     def pins(self):
