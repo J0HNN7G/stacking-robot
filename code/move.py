@@ -28,18 +28,13 @@ class Move:
         :param dc: GPIO number of pin controlling motor engine
         :param leftMotor: GPIO number of pin controlling backward motion
         :param rightMotor: GPIO number of pin controlling forward motion
-        :raise TypeError: if dc is not a float, or if leftMotor or rightMotor
-                          is not a motor
         :raise ValueError: if dc is out of range
         """
-        error.checkType(dc, float, 'dc must be a float!')
         error.checkInRange(dc, self.MIN_DC, self.MAX_DC)
 
-        error.checkType(leftMotor, Motor, 'leftMotor must be a motor!')
         if not leftMotor.status():
             leftMotor.setup()
 
-        error.checkType(rightMotor, Motor, 'rightMotor must be a motor!')
         if not rightMotor.status():
             rightMotor.setup()
 

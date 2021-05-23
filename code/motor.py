@@ -33,25 +33,15 @@ class Motor(Component):
         :param enginePin: GPIO number of pin controlling motor engine
         :param backwardPin: GPIO number of pin controlling backward motion
         :param forwardPin: GPIO number of pin controlling forward motion
-        :raise TypeError: if enginePin, backwardPin or forwardPin is not a int,
-                          and if radius is not a float
         :raise ValueError: if enginePin, backwardPin, forwardPin is outside of
                            GPIO numbering range, or radius is not positive
         """
-        super().__init__()
-
-        error.checkType(enginePin, int, 'enginePin must be an int!')
         error.checkInRange(enginePin, self.GPIO_PIN_MIN, self.GPIO_PIN_MAX)
-
-        error.checkType(backwardPin, int, 'backwardPin must be an int!')
         error.checkInRange(backwardPin, self.GPIO_PIN_MIN, self.GPIO_PIN_MAX)
-
-        error.checkType(forwardPin, int, 'forwardPin must be an int!')
         error.checkInRange(forwardPin, self.GPIO_PIN_MIN, self.GPIO_PIN_MAX)
-
-        error.checkType(radius, float, 'radius must be a float!')
         error.checkPositive(radius)
 
+        super().__init__()
         self.enginePin = enginePin
         self.backwardPin = backwardPin
         self.forwardPin = forwardPin
