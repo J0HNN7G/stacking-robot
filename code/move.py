@@ -14,10 +14,10 @@ class Move:
     # DC_TO_SPEED = None
 
     # The motors' minimum duty cycle.
-    MIN_DC = 20
+    MIN_DC = 20.0
 
     # The motors' maximum duty cycle.
-    MAX_DC = 100
+    MAX_DC = 100.0
 
 
     def __init__(self, dc, leftMotor, rightMotor):
