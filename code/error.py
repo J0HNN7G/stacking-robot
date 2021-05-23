@@ -54,5 +54,5 @@ def checkComponent(component, component_name):
     :param component_name: name of the component
     :raise ValueError: if status is False
     """
-    if not component.status():
+    if not component.status:
         raise ValueError(component_name + ' is off')
