@@ -42,6 +42,14 @@ class Move:
         self.rightMotor = rightMotor
 
 
+    def cleanup(self):
+        """
+        Cleanup the motors for ending of movement.
+        """
+        self.leftMotor.cleanup()
+        self.rightMotor.cleanup()
+
+
     def moveDuration(self, duration, direction):
         """
         Move for a given duration in a given direction.
