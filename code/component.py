@@ -1,22 +1,20 @@
 # -*- coding: utf-8 -*-
 
 import error
+from abc import ABC, abstractmethod
 
 
-class Component():
-    """A class for the hardware components of the robot."""
+class Component(ABC):
+    """An abstract class for the hardware components of the robot."""
 
 
-    def __init__(self):
-        """Initialise the component."""
-        self.status = False
-
-
+    @abstractmethod
     def setup(self):
         """Setup the component."""
         pass
 
 
+    @abstractmethod
     def cleanup(self):
         """Cleanup the component."""
         pass

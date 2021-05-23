@@ -40,7 +40,7 @@ class Motor(Component):
         error.checkGPIO(forwardPin, self.GPIO_PIN_MIN, self.GPIO_PIN_MAX)
         error.checkPositive(radius)
 
-        super().__init__()
+        self.status = False
         self.enginePin = enginePin
         self.backwardPin = backwardPin
         self.forwardPin = forwardPin
