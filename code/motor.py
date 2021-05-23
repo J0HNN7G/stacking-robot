@@ -56,7 +56,7 @@ class Motor(Component):
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.pins(), GPIO.OUT)
 
-        self.stop()
+        GPIO.output(self.pins(), GPIO.LOW)
         try:
             # Create PWM instance and output
             self.pwm = GPIO.PWM(self.enginePin, self.STD_FREQ)
@@ -79,6 +79,7 @@ class Motor(Component):
         """
         Stop the motor.
         """
+        self.pwm.stop()
         GPIO.output(self.pins(), GPIO.LOW)
 
 
