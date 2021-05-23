@@ -13,12 +13,6 @@ class Motor(Component):
     # Standard frequency (Hz) of PWM instance controlling motor engine.
     STD_FREQ = 1000
 
-    # Minimum GPIO numbering value.
-    GPIO_PIN_MIN = 1
-
-    # Maximum GPIO numbering value.
-    GPIO_PIN_MAX = 27
-
     # Standard radius (?)
     STD_RADIUS = 0.6
 
@@ -35,9 +29,9 @@ class Motor(Component):
         :raise ValueError: if enginePin, backwardPin, forwardPin is outside of
                            GPIO numbering, or radius is not positive
         """
-        error.checkGPIO(enginePin, self.GPIO_PIN_MIN, self.GPIO_PIN_MAX)
-        error.checkGPIO(backwardPin, self.GPIO_PIN_MIN, self.GPIO_PIN_MAX)
-        error.checkGPIO(forwardPin, self.GPIO_PIN_MIN, self.GPIO_PIN_MAX)
+        error.checkGPIO(enginePin)
+        error.checkGPIO(backwardPin)
+        error.checkGPIO(forwardPin)
         error.checkPositive(radius)
 
         self.status = False
