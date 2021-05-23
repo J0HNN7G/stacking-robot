@@ -24,7 +24,6 @@ class Motor(Component):
 
 
     def __init__(self, enginePin, backwardPin, forwardPin, radius = STD_RADIUS):
-        # type: (float, int, int, int) -> None
         """
         Initialise a motor with the radius of the wheel it spins and the
         GPIO numbered pins that control it.
@@ -34,11 +33,11 @@ class Motor(Component):
         :param backwardPin: GPIO number of pin controlling backward motion
         :param forwardPin: GPIO number of pin controlling forward motion
         :raise ValueError: if enginePin, backwardPin, forwardPin is outside of
-                           GPIO numbering range, or radius is not positive
+                           GPIO numbering, or radius is not positive
         """
-        error.checkInRange(enginePin, self.GPIO_PIN_MIN, self.GPIO_PIN_MAX)
-        error.checkInRange(backwardPin, self.GPIO_PIN_MIN, self.GPIO_PIN_MAX)
-        error.checkInRange(forwardPin, self.GPIO_PIN_MIN, self.GPIO_PIN_MAX)
+        error.checkGPIO(enginePin, self.GPIO_PIN_MIN, self.GPIO_PIN_MAX)
+        error.checkGPIO(backwardPin, self.GPIO_PIN_MIN, self.GPIO_PIN_MAX)
+        error.checkGPIO(forwardPin, self.GPIO_PIN_MIN, self.GPIO_PIN_MAX)
         error.checkPositive(radius)
 
         super().__init__()
@@ -49,7 +48,6 @@ class Motor(Component):
 
 
     def setup(self):
-        # type: None -> None
         """
         Setup the motor for use.
         """
@@ -69,7 +67,6 @@ class Motor(Component):
 
 
     def cleanup(self):
-        # type: None -> None
         """
         Cleanup the motor.
         """
@@ -79,7 +76,6 @@ class Motor(Component):
 
 
     def stop(self):
-        # type: None -> None
         """
         Stop the motor.
         """
@@ -87,7 +83,6 @@ class Motor(Component):
 
 
     def pins(self):
-        # type: None -> [int]
         """
         Get a list of the pins
 

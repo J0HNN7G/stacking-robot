@@ -8,18 +8,15 @@ class Component():
 
 
     def __init__(self):
-        # type: (...) -> (...)
         """Initialise the component."""
         self.status = False
 
 
     def setup(self):
-        # type: (...) -> (...)
         """Setup the component."""
         pass
 
 
     def cleanup(self):
-        # type: (...) -> (...)
         """Cleanup the component."""
         pass

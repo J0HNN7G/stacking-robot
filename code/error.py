@@ -1,22 +1,17 @@
 # -*- coding: utf-8 -*-
 
 
-def checkType(val, type, msg):
-    # (<Type instance>, <Type>, str) -> (None || TypeError)
-    """
-    Check if the given value has the correct type.
+# Minimum GPIO numbering value.
+GPIO_PIN_MIN = 1
 
-    :param val: a type instance
-    :param type: a type/class
-    :param msg: message to be raised with TypeError
-    :raise TypeError: if val is not of type
-    """
-    if not isinstance(val, type):
-        raise TypeError(msg)
+# Maximum GPIO numbering value.
+GPIO_PIN_MAX = 27
+
+# List of GPIO numberings
+GPIO_PIN_LIST = [i for i in range(GPIO_PIN_MIN, GPIO_PIN_MAX+1)]
 
 
 def checkPositive(val):
-    # (number) -> (None || ValueError)
     """
     Check if the given number is positive.
 
@@ -28,7 +23,6 @@ def checkPositive(val):
 
 
 def checkInRange(val, minVal, maxVal):
-    # (number, number, number) -> (None || ValueError)
     """
     Check if the given value is between a minimum and maximum value (inclusive).
 
@@ -41,8 +35,18 @@ def checkInRange(val, minVal, maxVal):
         raise ValueError(f'Expected {minVal} <= value <= {maxVal}, but value: {val}')
 
 
+def checkGPIO(val):
+    """
+    Check if the given number is in the GPIO numbering
+
+    :param val: a number
+    :raise ValueError: if the val is not in the GPIO numbering
+    """
+    if val not in GPIO_PIN_LIST:
+        raise ValueError(f"Expected GPIO pin numbering (1-27), but value: {val}")
+
+
 def checkComponent(component, component_name):
-    # (bool, string) -> (None || ValueError)
     """
     Check if the component is on.
 

@@ -21,7 +21,6 @@ class Move:
 
 
     def __init__(self, dc, leftMotor, rightMotor):
-        # type: (float, Motor, Motor) -> None
         """
         Initialise both motors with a given duty cycle.
 
@@ -44,7 +43,6 @@ class Move:
 
 
     def moveDuration(self, duration, direction):
-        # type: (float, Direction) -> None
         """
         Move for a given duration in a given direction.
 
