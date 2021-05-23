@@ -31,10 +31,10 @@ class Move:
         """
         error.checkInRange(dc, self.MIN_DC, self.MAX_DC)
 
-        if not leftMotor.status():
+        if not leftMotor.status:
             leftMotor.setup()
 
-        if not rightMotor.status():
+        if not rightMotor.status:
             rightMotor.setup()
 
         self.dc = dc
