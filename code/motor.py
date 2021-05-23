@@ -93,7 +93,6 @@ class Motor(Component):
         """
         Stop the motor.
         """
-        self.pwm.stop()
         GPIO.output(self.pins(), GPIO.LOW)
 
 
