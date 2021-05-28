@@ -11,13 +11,16 @@ import RPi.GPIO as GPIO
 class Move:
     """A class for controlling the movement of the robot."""
 
-    # DC_TO_SPEED = None
 
     # The motors' minimum duty cycle.
     MIN_DC = 20
 
     # The motors' maximum duty cycle.
     MAX_DC = 100
+
+    # Standard radius  of wheels (0-1). No specific unit.
+    # Used for calculating turning speed.
+    STD_RADIUS = 0.6
 
 
     def __init__(self, dc, leftMotor, rightMotor):
@@ -56,22 +59,44 @@ class Move:
 
         :param duration: number of seconds of movement
         :param direction: direction of movement
-        :raise ValueError: if left or right motor is off
+        :raise ValueError: if left or right motor is off, or duration is not
+                           positive
         """
+        assert isinstance(direction, Direction)
+
         error.checkComponent(self.leftMotor, "Left motor")
         error.checkComponent(self.rightMotor, "Right motor")
+        error.checkPositive(duration)
+
+        left_dc = self.dc
+        right_dc = self.dc
 
         if direction is Direction.FORWARD:
             GPIO.output([self.leftMotor.backwardPin, self.rightMotor.backwardPin], GPIO.LOW)
             GPIO.output([self.leftMotor.forwardPin, self.rightMotor.forwardPin], GPIO.HIGH)
+
         elif direction is Direction.BACKWARD:
             GPIO.output([self.leftMotor.forwardPin, self.rightMotor.forwardPin], GPIO.LOW)
             GPIO.output([self.leftMotor.backwardPin, self.rightMotor.backwardPin], GPIO.HIGH)
 
-        self.leftMotor.pwm.start(self.dc)
-        self.rightMotor.pwm.start(self.dc)
+        elif direction is Direction.LEFT:
+            GPIO.output([self.leftMotor.forwardPin, self.rightMotor.backwardPin], GPIO.LOW)
+            GPIO.output([self.leftMotor.backwardPin, self.rightMotor.forwardPin], GPIO.HIGH)
+            left_dc *= self.STD_RADIUS
 
-        time.sleep(duration)
+        elif direction is Direction.RIGHT:
+            GPIO.output([self.leftMotor.backwardPin, self.rightMotor.forwardPin], GPIO.LOW)
+            GPIO.output([self.leftMotor.forwardPin, self.rightMotor.backwardPin], GPIO.HIGH)
+            right_dc *= self.STD_RADIUS
 
-        self.leftMotor.stop()
-        self.rightMotor.stop()
+        try:
+            self.leftMotor.pwm.start(left_dc)
+            self.rightMotor.pwm.start(right_dc)
+
+            time.sleep(duration)
+            
+            self.leftMotor.stop()
+            self.rightMotor.stop()
+        except Exception as e:
+            print(e)
+            self.cleanup()

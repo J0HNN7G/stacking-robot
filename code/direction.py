@@ -7,3 +7,5 @@ class Direction(Enum):
     """An enum class for representing the direction of the robot."""
     FORWARD = auto()
     BACKWARD = auto()
+    LEFT = auto()
+    RIGHT = auto()

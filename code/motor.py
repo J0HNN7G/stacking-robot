@@ -13,32 +13,25 @@ class Motor(Component):
     # Standard frequency (Hz) of PWM instance controlling motor engine.
     STD_FREQ = 1000
 
-    # Standard radius (?)
-    STD_RADIUS = 0.6
 
-
-    def __init__(self, enginePin, backwardPin, forwardPin, radius = STD_RADIUS):
+    def __init__(self, enginePin, backwardPin, forwardPin):
         """
-        Initialise a motor with the radius of the wheel it spins and the
-        GPIO numbered pins that control it.
+        Initialise a motor with the GPIO numbered pins that control it.
 
-        :param radius: the radius of the motor's wheel in millimetres
         :param enginePin: GPIO number of pin controlling motor engine
         :param backwardPin: GPIO number of pin controlling backward motion
         :param forwardPin: GPIO number of pin controlling forward motion
         :raise ValueError: if enginePin, backwardPin, forwardPin is outside of
-                           GPIO numbering, or radius is not positive
+                           GPIO numbering
         """
         error.checkGPIO(enginePin)
         error.checkGPIO(backwardPin)
         error.checkGPIO(forwardPin)
-        error.checkPositive(radius)
 
         self.status = False
         self.enginePin = enginePin
         self.backwardPin = backwardPin
         self.forwardPin = forwardPin
-        self.radius = radius
 
 
     def setup(self):
