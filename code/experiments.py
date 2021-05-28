@@ -6,4 +6,4 @@ from motor import Motor
 leftMotor = Motor(17, 18, 27)
 rightMotor = Motor(4, 14, 15)
 
-robot = Move(99.5, leftMotor, rightMotor)
+robot = Move(MOVE.MAX_DC, leftMotor, rightMotor)
