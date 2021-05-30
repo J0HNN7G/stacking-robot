@@ -10,7 +10,7 @@ from adafruit_servokit import ServoKit
 class Head(Component):
     """A class for controlling the head of the robot."""
 
-    INIT_ANGLE = 0
+    INIT_ANGLE = 90
 
     def __init__(self, headPin):
         error.checkPCA9685(headPin)
