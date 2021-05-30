@@ -53,7 +53,7 @@ class Body:
         self.rightMotor.cleanup()
 
 
-    def moveBody(self, duration, direction):
+    def move(self, duration, direction):
         """
         Move for a given duration in a given direction.
 

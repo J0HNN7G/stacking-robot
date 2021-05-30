@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from arm import Arm
-from body import Body
+from head import Head
+rom body import Body
 from motor import Motor
+from direction import Direction
 
-leftMotor = Motor(17, 18, 27)
-rightMotor = Motor(4, 14, 15)
-
-body = Body(Body.MAX_MOTOR_DC, leftMotor, rightMotor)
+body = Body(Body.MAX_MOTOR_DC, Motor(17, 18, 27), Motor(4, 14, 15))
 arm = Arm(12,13,14,15)
+head = Head(11)
