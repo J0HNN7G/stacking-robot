@@ -8,15 +8,15 @@ import time
 import RPi.GPIO as GPIO
 
 
-class Move:
-    """A class for controlling the movement of the robot."""
+class Body:
+    """A class for controlling the movement of the robot body."""
 
 
     # The motors' minimum duty cycle.
-    MIN_DC = 20
+    MIN_MOTOR_DC = 20
 
     # The motors' maximum duty cycle.
-    MAX_DC = 100
+    MAX_MOTOR_DC = 100
 
     # Standard radius  of wheels (0-1). No specific unit.
     # Used for calculating turning speed.
@@ -32,7 +32,7 @@ class Move:
         :param rightMotor: GPIO number of pin controlling forward motion
         :raise ValueError: if dc is out of range
         """
-        error.checkInRange(dc, self.MIN_DC, self.MAX_DC)
+        error.checkInRange(dc, self.MIN_MOTOR_DC, self.MAX_MOTOR_DC)
 
         if not leftMotor.status:
             leftMotor.setup()
@@ -53,7 +53,7 @@ class Move:
         self.rightMotor.cleanup()
 
 
-    def moveDuration(self, duration, direction):
+    def moveBody(self, duration, direction):
         """
         Move for a given duration in a given direction.
 
@@ -62,10 +62,9 @@ class Move:
         :raise ValueError: if left or right motor is off, or duration is not
                            positive
         """
-        assert isinstance(direction, Direction)
-
         error.checkComponent(self.leftMotor, "Left motor")
         error.checkComponent(self.rightMotor, "Right motor")
+        error.checkType(direction, Direction, 'direction', 'Direction')
         error.checkPositive(duration)
 
         left_dc = self.dc
@@ -94,7 +93,7 @@ class Move:
             self.rightMotor.pwm.start(right_dc)
 
             time.sleep(duration)
-            
+
             self.leftMotor.stop()
             self.rightMotor.stop()
         except Exception as e:

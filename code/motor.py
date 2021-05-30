@@ -11,7 +11,7 @@ class Motor(Component):
 
 
     # Standard frequency (Hz) of PWM instance controlling motor engine.
-    STD_FREQ = 1000
+    STD_MOTOR_FREQ = 1000
 
 
     def __init__(self, enginePin, backwardPin, forwardPin):
@@ -46,7 +46,7 @@ class Motor(Component):
         GPIO.output(self.pins(), GPIO.LOW)
         try:
             # Create PWM instance and output
-            self.pwm = GPIO.PWM(self.enginePin, self.STD_FREQ)
+            self.pwm = GPIO.PWM(self.enginePin, self.STD_MOTOR_FREQ)
             self.status = True
         except Exception as e:
             print(e)
