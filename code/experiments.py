@@ -2,7 +2,7 @@
 
 from arm import Arm
 from head import Head
-rom body import Body
+from body import Body
 from motor import Motor
 from direction import Direction
 
