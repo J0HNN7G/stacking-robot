@@ -20,18 +20,18 @@ PCA9685_PIN_MAX = 15
 PCA9685_PIN_LIST = [i for i in range(PCA9685_PIN_MIN, PCA9685_PIN_MAX+1)]
 
 
-def checkType(val, class, valName, className):
+def checkType(val, classy, valName, className):
     """
     Check if the given value is the correct type. Use sparingly (this is python)
     after all.
 
     :param val: an object
-    :param class: a class
+    :param classy: a class
     :param valName: the name of the object
     :param className: the name of the class
     :raise TypeError: if given value is not a class instance
     """
-    if not isinstance(val, class):
+    if not isinstance(val, classy):
         raise TypeError(f'Given {valName} is a {className} instance')
 
 
