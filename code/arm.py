@@ -2,6 +2,8 @@
 
 
 import error
+from component import Component
+
 from adafruit_servokit import ServoKit
 
 
