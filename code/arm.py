@@ -18,12 +18,14 @@ class Arm(Component):
         error.checkPCA9685(wristPin)
         error.checkPCA9685(grabberPin)
 
-        set.status = False
+        self.status = False
         self.kit = ServoKit(channels=16)
         self.shoulder = self.kit.servo[shoulderPin]
         self.elbow = self.kit.servo[elbowPin]
         self.wrist = self.kit.servo[wristPin]
         self.grabber = self.kit.servo[grabberPin]
+
+        self.setup()
 
 
     def setup(self):
