@@ -15,9 +15,9 @@ class Head(Component):
 
     MAX_REAL_VIEW_ANGLE = 60
 
-    INIT_VIEW_ANGLE = 100
+    INIT_VIEW_ANGLE = 90
 
-    VIEW_ACT_RNG = 100
+    VIEW_ACT_RNG = 90
 
 
     def __init__(self, viewPin):
