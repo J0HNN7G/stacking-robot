@@ -36,9 +36,9 @@ class Head(Component):
 
     @property
     def view(self):
-        return self.VIEW_ACT_RNG - self._view.angle
+        return self._view.angle
 
     @view.setter
     def view(self,angle):
         error.checkInRange(angle, 0, self.VIEW_ACT_RNG)
-        self._view.angle = self.VIEW_ACT_RNG - angle
+        self._view.angle = angle
