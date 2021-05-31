@@ -12,7 +12,7 @@ class Head(Component):
 
     VIEW_ACTUAL_RNG = 60
 
-    VIEW_ACT_RNG = 17
+    VIEW_ACT_RNG = 32
 
 
     def __init__(self, viewPin):
@@ -21,7 +21,6 @@ class Head(Component):
         self.status = False
         self.kit = ServoKit(channels=16)
         self._view = self.kit.servo[viewPin]
-        self._view.actuation_range = self.VIEW_ACT_RNG
 
         self.setup()
 
