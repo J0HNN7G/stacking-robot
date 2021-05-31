@@ -59,7 +59,7 @@ class Head(Component):
 
 
     @view.setter
-    def view(self,angle):
+    def view(self, angle):
         """
         Set the view angle.
 

@@ -9,10 +9,11 @@ from adafruit_servokit import ServoKit
 
 class Arm(Component):
     """A class for controlling the arm of the robot."""
+    # TODO explain the angles here
 
-    SHOULDER_INIT_ANGLE = 85
+    SHOULDER_INIT_ANGLE = 80
 
-    ELBOW_INIT_ANGLE = 100
+    ELBOW_INIT_ANGLE = 105
 
     WRIST_INIT_ANGLE = 95
 
@@ -50,7 +51,6 @@ class Arm(Component):
         self._grabber.angle = None
         self.status = False
 
-
     @property
     def shoulder(self):
         return self._shoulder.angle
@@ -72,21 +72,23 @@ class Arm(Component):
 
 
     @shoulder.setter
-    def shoulder(self,angle):
-        self._shoulder.angle = angle
+    def shoulder(self, angle):
+        # actual range is 175
+        error.checkInRange(angle, 22, 175)
+        self._shoulder.angle = (angle - 22) * 180/153
 
 
     @elbow.setter
-    def elbow(self,angle):
+    def elbow(self, angle):
         self._elbow.angle = angle
 
 
     @wrist.setter
-    def wrist(self,angle):
+    def wrist(self, angle):
         self._wrist.angle = angle
 
 
     @grabber.setter
-    def grabber(self,angle):
+    def grabber(self, angle):
         error.checkInRange(angle, 0, self.GRABBER_DOM)
         self._grabber.angle = angle
