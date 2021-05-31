@@ -15,7 +15,7 @@ class Head(Component):
 
     MAX_REAL_VIEW_ANGLE = 60
 
-    INIT_VIEW_ANGLE = 0
+    INIT_VIEW_ANGLE = 100
 
     VIEW_ACT_RNG = 100
 
@@ -26,7 +26,7 @@ class Head(Component):
         self.status = False
         self.kit = ServoKit(channels=16)
         self._view = self.kit.servo[viewPin]
-        self._view.actuation_range = self.VIEW_ACT_RNG
+        self._view.actuation_range = self.INIT_VIEW_ANGLE
 
         self.setup()
 
