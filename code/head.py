@@ -12,7 +12,7 @@ class Head(Component):
 
     VIEW_ACTUAL_RNG = 60
 
-    VIEW_ACT_RNG = 32
+    VIEW_ACT_RNG = 17
 
 
     def __init__(self, viewPin):
