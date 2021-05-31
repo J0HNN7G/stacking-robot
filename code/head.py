@@ -26,7 +26,7 @@ class Head(Component):
         self.status = False
         self.kit = ServoKit(channels=16)
         self.view = self.kit.servo[viewPin]
-        self.view.actuation_range = VIEW_ACT_RNG
+        self.view.actuation_range = self.VIEW_ACT_RNG
 
         self.setup()
 
