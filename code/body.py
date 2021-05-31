@@ -44,11 +44,11 @@ class Body(Component):
         """
         Setup the motors for movement.
         """
-        if not leftMotor.status:
-            leftMotor.setup()
+        if not self.leftMotor.status:
+            self.leftMotor.setup()
 
-        if not rightMotor.status:
-            rightMotor.setup()
+        if not self.rightMotor.status:
+            self.rightMotor.setup()
 
 
     def cleanup(self):
