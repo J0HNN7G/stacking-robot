@@ -53,7 +53,7 @@ class Head(Component):
         """
         Get the view angle.
 
-        :return: the view angle in degrees
+        :return: view angle in degrees
         """
         return self.VIEW_RNG * (1 - self._view.angle / self.VIEW_DOM)
 
@@ -63,9 +63,9 @@ class Head(Component):
         """
         Set the view angle.
 
-        :param angle: the angle for the view to be set at in degrees
+        :param angle: view angle in degrees
         :raise ValueError: if the angle is not between 0 to 60, or
-                           component is off
+                           the head is off
         """
         error.checkComponent(self, 'Head')
         error.checkInRange(angle, 0, self.VIEW_RNG)
