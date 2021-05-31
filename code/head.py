@@ -10,8 +10,9 @@ from adafruit_servokit import ServoKit
 class Head(Component):
     """A class for controlling the head of the robot."""
 
+    VIEW_ACTUAL_RNG = 60
 
-    VIEW_ACT_RNG = 60
+    VIEW_ACT_RNG = 32
 
 
     def __init__(self, viewPin):
@@ -36,9 +37,9 @@ class Head(Component):
 
     @property
     def view(self):
-        return self._view.angle
+        return self.VIEW_ACTUAL_RNG * (1 - self._view.angle / self.VIEW_ACT_RNG)
 
     @view.setter
     def view(self,angle):
-        error.checkInRange(angle, 0, self.VIEW_ACT_RNG)
-        self._view.angle = angle
+        error.checkInRange(angle, 0, self.VIEW_ACTUAL_RNG)
+        self._view.angle = self.VIEW_ACT_RNG * (1 - angle / VIEW_ACTUAL_RNG)
