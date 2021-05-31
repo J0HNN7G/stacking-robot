@@ -55,21 +55,25 @@ class Arm(Component):
         self.status = False
 
 
+    @shoulder.setter
     def shoulder(self,angle):
         error.checkComponent(self, 'Arm')
         self.shoulder.angle = angle
 
 
+    @elbow.setter
     def elbow(self,angle):
         error.checkComponent(self, 'Arm')
         self.elbow.angle = angle
 
 
+    @wrist.setter
     def wrist(self,angle):
         error.checkComponent(self, 'Arm')
         self.wrist.angle = angle
 
 
+    @grabber.setter
     def grabber(self,angle):
         error.checkComponent(self, 'Arm')
         self.grabber.angle = angle
