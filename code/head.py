@@ -67,6 +67,6 @@ class Head(Component):
         :raise ValueError: if the angle is not between 0 to 60, or
                            component is off
         """
-        error.checkComponent(self)
+        error.checkComponent(self, 'Head')
         error.checkInRange(angle, 0, self.VIEW_RNG)
         self._view.angle = self.VIEW_DOM * (1 - angle / self.VIEW_RNG)
