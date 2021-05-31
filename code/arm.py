@@ -34,7 +34,7 @@ class Arm(Component):
         self.wrist = self.kit.servo[wristPin]
 
         self.grabber = self.kit.servo[grabberPin]
-        self.grabber.actuation_range = GRABBER_ACT_RNG
+        self.grabber.actuation_range = self.GRABBER_ACT_RNG
 
         self.setup()
 
