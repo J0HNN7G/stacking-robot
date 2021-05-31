@@ -9,3 +9,7 @@ from direction import Direction
 body = Body(Body.MAX_MOTOR_DC, Motor(17, 18, 27), Motor(4, 14, 15))
 arm = Arm(12,13,14,15)
 head = Head(11)
+
+body.setup()
+arm.setup()
+head.setup()

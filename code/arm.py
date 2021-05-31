@@ -18,7 +18,7 @@ class Arm(Component):
 
     GRABBER_INIT_ANGLE = 90
 
-    GRABBER_ACT_RNG = 90
+    GRABBER_DOM = 90
 
 
     def __init__(self, shoulderPin, elbowPin, wristPin, grabberPin):
@@ -32,11 +32,7 @@ class Arm(Component):
         self._shoulder = self.kit.servo[shoulderPin]
         self._elbow = self.kit.servo[elbowPin]
         self._wrist = self.kit.servo[wristPin]
-
         self._grabber = self.kit.servo[grabberPin]
-        self._grabber.actuation_range = self.GRABBER_ACT_RNG
-
-        self.setup()
 
 
     def setup(self):
@@ -48,10 +44,10 @@ class Arm(Component):
 
 
     def cleanup(self):
-        self._shoulder.angle = self.SHOULDER_INIT_ANGLE
-        self._elbow.angle = self.ELBOW_INIT_ANGLE
-        self._wrist.angle = self.WRIST_INIT_ANGLE
-        self._grabber.angle = self.GRABBER_INIT_ANGLE
+        self._shoulder.angle = None
+        self._elbow.angle = None
+        self._wrist.angle = None
+        self._grabber.angle = None
         self.status = False
 
 
@@ -92,4 +88,5 @@ class Arm(Component):
 
     @grabber.setter
     def grabber(self,angle):
+        error.checkInRange(angle, 0, self.GRABBER_DOM)
         self._grabber.angle = angle

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import error
+from component import Component
 from motor import Motor
 from direction import Direction
 
@@ -8,7 +9,7 @@ import time
 import RPi.GPIO as GPIO
 
 
-class Body:
+class Body(Component):
     """A class for controlling the movement of the robot body."""
 
 
@@ -25,24 +26,29 @@ class Body:
 
     def __init__(self, dc, leftMotor, rightMotor):
         """
-        Initialise both motors with a given duty cycle.
+        Initialise the body for movmement
 
-        :param dc: GPIO number of pin controlling motor engine
-        :param leftMotor: GPIO number of pin controlling backward motion
-        :param rightMotor: GPIO number of pin controlling forward motion
+        :param dc: Duty cycle used by motors
+        :param leftMotor: left motor of the robot
+        :param rightMotor: right motor of the robot
         :raise ValueError: if dc is out of range
         """
         error.checkInRange(dc, self.MIN_MOTOR_DC, self.MAX_MOTOR_DC)
 
+        self.dc = dc
+        self.leftMotor = leftMotor
+        self.rightMotor = rightMotor
+
+
+    def setup(self):
+        """
+        Setup the motors for movement.
+        """
         if not leftMotor.status:
             leftMotor.setup()
 
         if not rightMotor.status:
             rightMotor.setup()
-
-        self.dc = dc
-        self.leftMotor = leftMotor
-        self.rightMotor = rightMotor
 
 
     def cleanup(self):

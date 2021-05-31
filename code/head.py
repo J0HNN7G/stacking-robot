@@ -10,35 +10,63 @@ from adafruit_servokit import ServoKit
 class Head(Component):
     """A class for controlling the head of the robot."""
 
-    VIEW_ACTUAL_RNG = 60
 
-    VIEW_ACT_RNG = 100
+    # The domain of the function which controls the view angle.
+    VIEW_DOM = 100
+
+    # The actual range of the view angle.
+    VIEW_RNG = 60
 
 
     def __init__(self, viewPin):
+        """
+        Initialise the head view movement.
+
+        :param viewPin: PCA9685 numbering of the pin controlling the head
+        :raise ValueError: if viewPin is not a PCA9685 numbering
+        """
         error.checkPCA9685(viewPin)
 
         self.status = False
         self.kit = ServoKit(channels=16)
         self._view = self.kit.servo[viewPin]
 
-        self.setup()
-
 
     def setup(self):
-        self._view.angle = self.VIEW_ACT_RNG
+        """
+        Setup the view to be at the standard angle.
+        """
+        self._view.angle = self.VIEW_DOM
         self.status = True
 
 
     def cleanup(self):
-        self._view.angle = self.VIEW_ACT_RNG
+        """
+        Cleanup the view by turning off the servo.
+        """
+        self._view.angle = None
         self.status = False
+
 
     @property
     def view(self):
-        return self.VIEW_ACTUAL_RNG * (1 - self._view.angle / self.VIEW_ACT_RNG)
+        """
+        Get the view angle.
+
+        :return: the view angle in degrees
+        """
+        return self.VIEW_RNG * (1 - self._view.angle / self.VIEW_DOM)
+
 
     @view.setter
     def view(self,angle):
-        error.checkInRange(angle, 0, self.VIEW_ACTUAL_RNG)
-        self._view.angle = self.VIEW_ACT_RNG * (1 - angle / self.VIEW_ACTUAL_RNG)
+        """
+        Set the view angle.
+
+        :param angle: the angle for the view to be set at in degrees
+        :raise ValueError: if the angle is not between 0 to 60, or
+                           component is off
+        """
+        error.checkComponent(self)
+        error.checkInRange(angle, 0, self.VIEW_RNG)
+        self._view.angle = self.VIEW_DOM * (1 - angle / self.VIEW_RNG)
