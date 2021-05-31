@@ -10,23 +10,37 @@ from adafruit_servokit import ServoKit
 class Head(Component):
     """A class for controlling the head of the robot."""
 
-    INIT_ANGLE = 90
 
-    def __init__(self, headPin):
-        error.checkPCA9685(headPin)
+    MIN_REAL_VIEW_ANGLE = 0
+
+    MAX_REAL_VIEW_ANGLE = 60
+
+    INIT_VIEW_ANGLE = 100
+
+    VIEW_ACT_RNG = 100
+
+
+    def __init__(self, viewPin):
+        error.checkPCA9685(viewPin)
 
         self.status = False
         self.kit = ServoKit(channels=16)
-        self.head = self.kit.servo[headPin]
+        self.view = self.kit.servo[viewPin]
+        self.view.actuation_range = VIEW_ACT_RNG
 
         self.setup()
 
 
     def setup(self):
-        self.head.angle = self.INIT_ANGLE
+        self.view.angle = self.INIT_VIEW_ANGLE
         self.status = True
 
 
     def cleanup(self):
-        self.head.angle = self.INIT_ANGLE
+        self.view.angle = self.INIT_VIEW_ANGLE
         self.status = False
+
+
+    def view(angle):
+        error.checkInRange(angle, self.MIN_REAL_VIEW_ANGLE, self.MAX_REAL_VIEW_ANGLE)
+        self.view.angle = self.VIEW_ACT_RNG * (1 - (angle / MAX_REAL_VIEW_ANGLE))
