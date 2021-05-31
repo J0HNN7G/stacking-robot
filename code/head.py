@@ -41,6 +41,6 @@ class Head(Component):
         self.status = False
 
 
-    def view(angle):
+    def view(self,angle):
         error.checkInRange(angle, self.MIN_REAL_VIEW_ANGLE, self.MAX_REAL_VIEW_ANGLE)
         self.view.angle = self.VIEW_ACT_RNG * (1 - (angle / MAX_REAL_VIEW_ANGLE))
