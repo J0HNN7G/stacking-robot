@@ -29,67 +29,67 @@ class Arm(Component):
 
         self.status = False
         self.kit = ServoKit(channels=16)
-        self.shoulder = self.kit.servo[shoulderPin]
-        self.elbow = self.kit.servo[elbowPin]
-        self.wrist = self.kit.servo[wristPin]
+        self._shoulder = self.kit.servo[shoulderPin]
+        self._elbow = self.kit.servo[elbowPin]
+        self._wrist = self.kit.servo[wristPin]
 
-        self.grabber = self.kit.servo[grabberPin]
-        self.grabber.actuation_range = self.GRABBER_ACT_RNG
+        self._grabber = self.kit.servo[grabberPin]
+        self._grabber.actuation_range = self.GRABBER_ACT_RNG
 
         self.setup()
 
 
     def setup(self):
-        self.shoulder.angle = self.SHOULDER_INIT_ANGLE
-        self.elbow.angle = self.ELBOW_INIT_ANGLE
-        self.wrist.angle = self.WRIST_INIT_ANGLE
-        self.grabber.angle = self.GRABBER_INIT_ANGLE
+        self._shoulder.angle = self.SHOULDER_INIT_ANGLE
+        self._elbow.angle = self.ELBOW_INIT_ANGLE
+        self._wrist.angle = self.WRIST_INIT_ANGLE
+        self._grabber.angle = self.GRABBER_INIT_ANGLE
         self.status = True
 
 
     def cleanup(self):
-        self.shoulder.angle = self.SHOULDER_INIT_ANGLE
-        self.elbow.angle = self.ELBOW_INIT_ANGLE
-        self.wrist.angle = self.WRIST_INIT_ANGLE
-        self.grabber.angle = self.GRABBER_INIT_ANGLE
+        self._shoulder.angle = self.SHOULDER_INIT_ANGLE
+        self._elbow.angle = self.ELBOW_INIT_ANGLE
+        self._wrist.angle = self.WRIST_INIT_ANGLE
+        self._grabber.angle = self.GRABBER_INIT_ANGLE
         self.status = False
 
 
     @property
     def shoulder(self):
-        return self.shoulder.angle
+        return self._shoulder.angle
 
 
     @property
     def elbow(self):
-        return self.elbow.angle
+        return self._elbow.angle
 
 
     @property
     def wrist(self):
-        return self.wrist.angle
+        return self._wrist.angle
 
 
     @property
     def grabber(self):
-        return self.grabber.angle
+        return self._grabber.angle
 
 
     @shoulder.setter
     def shoulder(self,angle):
-        self.shoulder.angle = angle
+        self._shoulder.angle = angle
 
 
     @elbow.setter
     def elbow(self,angle):
-        self.elbow.angle = angle
+        self._elbow.angle = angle
 
 
     @wrist.setter
     def wrist(self,angle):
-        self.wrist.angle = angle
+        self._wrist.angle = angle
 
 
     @grabber.setter
     def grabber(self,angle):
-        self.grabber.angle = angle
+        self._grabber.angle = angle
