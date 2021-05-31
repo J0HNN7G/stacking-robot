@@ -40,8 +40,11 @@ class Head(Component):
         self.view.angle = self.INIT_VIEW_ANGLE
         self.status = False
 
+    @property
+    def view(self):
+        return self.MAX_REAL_VIEW_ANGLE * (1 - (self.view.angle / self.VIEW_ACT_RNG))
 
     @view.setter
     def view(self,angle):
         error.checkInRange(angle, self.MIN_REAL_VIEW_ANGLE, self.MAX_REAL_VIEW_ANGLE)
-        self.view.angle = self.VIEW_ACT_RNG * (1 - (angle / MAX_REAL_VIEW_ANGLE))
+        self.view.angle = self.VIEW_ACT_RNG * (1 - (angle / self.MAX_REAL_VIEW_ANGLE))
