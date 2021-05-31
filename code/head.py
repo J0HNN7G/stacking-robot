@@ -42,4 +42,4 @@ class Head(Component):
     @view.setter
     def view(self,angle):
         error.checkInRange(angle, 0, self.VIEW_ACTUAL_RNG)
-        self._view.angle = self.VIEW_ACT_RNG * (1 - angle / VIEW_ACTUAL_RNG)
+        self._view.angle = self.VIEW_ACT_RNG * (1 - angle / self.VIEW_ACTUAL_RNG)
