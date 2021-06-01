@@ -41,9 +41,7 @@ class Motor(Component):
         GPIO.setwarnings(False)
         # Set to GPIO numbering
         GPIO.setmode(GPIO.BCM)
-        GPIO.setup(self.pins(), GPIO.OUT)
-
-        GPIO.output(self.pins(), GPIO.LOW)
+        GPIO.setup(self.pins(), GPIO.OUT, initial=GPIO.LOW)
         try:
             # Create PWM instance and output
             self.pwm = GPIO.PWM(self.enginePin, self.STD_MOTOR_FREQ)
