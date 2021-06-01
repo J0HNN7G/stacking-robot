@@ -95,7 +95,7 @@ class Arm(Component):
 
         :return: shoulder angle in degrees
         """
-        return self._shoulder.angle * (self.SHOULDER_MAX_DOM - self.SHOULDER_MIN_DOM) / self.MAX_ANGLE + SELF.SHOULDER_MIN_DOM
+        return self._shoulder.angle * (self.SHOULDER_MAX_DOM - self.SHOULDER_MIN_DOM) / self.MAX_ANGLE + self.SHOULDER_MIN_DOM
 
 
     @property
@@ -106,7 +106,7 @@ class Arm(Component):
 
         :return: elbow angle in degrees
         """
-        return self._elbow.angle * (self.ELBOW_MAX_DOM - self.ELBOW_MIN_DOM) / self.MAX_ANGLE + SELF.ELBOW_MIN_DOM
+        return self._elbow.angle * (self.ELBOW_MAX_DOM - self.ELBOW_MIN_DOM) / self.MAX_ANGLE + self.ELBOW_MIN_DOM
 
 
     @property
@@ -154,7 +154,7 @@ class Arm(Component):
         """
         error.checkComponent(self, 'Arm')
         error.checkInRange(angle, self.ELBOW_MIN_DOM, self.ELBOW_MAX_DOM)
-        self._elbow.angle = (angle - SELF.ELBOW_MIN_DOM) * self.MAX_ANGLE / (self.ELBOW_MAX_DOM - self.ELBOW_MIN_DOM)
+        self._elbow.angle = (angle - self.ELBOW_MIN_DOM) * self.MAX_ANGLE / (self.ELBOW_MAX_DOM - self.ELBOW_MIN_DOM)
 
 
     @wrist.setter
