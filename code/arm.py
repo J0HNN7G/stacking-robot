@@ -27,7 +27,7 @@ class Arm(Component):
     ELBOW_MIN_DOM = 5
 
     # Maximum angle in the actual domain for the elbow angle.
-    ELBOW_MAX_DOM = 125
+    ELBOW_MAX_DOM = 135
 
     # Initial angle of the elbow (actually 90 degrees).
     ELBOW_INIT_ANGLE = 105
