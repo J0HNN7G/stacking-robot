@@ -11,8 +11,23 @@ class Arm(Component):
     """A class for controlling the arm of the robot."""
 
 
+    # The maximum angle in the input domain for any angle.
+    MAX_ANGLE = 180
+
+    # Minimum angle in the actual domain for the shoulder angle.
+    SHOULDER_MIN_DOM = 22
+
+    # Maximum angle in the actual domain for the shoulder angle.
+    SHOULDER_MAX_DOM = 175
+
     # Initial angle of the shoulder (actually 90 degrees).
     SHOULDER_INIT_ANGLE = 80
+
+    # Minimum angle in the actual domain for the elbow angle.
+    ELBOW_MIN_DOM = 5
+
+    # Maximum angle in the actual domain for the elbow angle.
+    ELBOW_MAX_DOM = 125
 
     # Initial angle of the elbow (actually 90 degrees).
     ELBOW_INIT_ANGLE = 105
@@ -75,21 +90,23 @@ class Arm(Component):
     @property
     def shoulder(self):
         """
-        Get the shoulder angle.
+        Get the shoulder angle. As the actual angle and input angle differ,
+        the value must be translated and stretched.
 
         :return: shoulder angle in degrees
         """
-        return self._shoulder.angle
+        return self._shoulder.angle * (self.SHOULDER_MAX_DOM - self.SHOULDER_MIN_DOM) / self.MAX_ANGLE + SELF.SHOULDER_MIN_DOM
 
 
     @property
     def elbow(self):
         """
-        Get the elbow angle.
+        Get the elbow angle. As the actual angle and input angle differ,
+        the value must be translated and stretched.
 
         :return: elbow angle in degrees
         """
-        return self._elbow.angle
+        return self._elbow.angle * (self.ELBOW_MAX_DOM - self.ELBOW_MIN_DOM) / self.MAX_ANGLE + SELF.ELBOW_MIN_DOM
 
 
     @property
@@ -115,26 +132,29 @@ class Arm(Component):
     @shoulder.setter
     def shoulder(self, angle):
         """
-        Set the shoulder angle.
+        Set the shoulder angle. As the actual angle and input angle differ,
+        the value must be translated and stretched.
 
         :param angle: shoulder angle in degrees
         :raise ValueError: if angle is not between 22 and 175, or the arm is off
         """
-        error.checkComponent(self)
-        error.checkInRange(angle, 22, 175)
-        self._shoulder.angle = (angle - 22) * 180/153
+        error.checkComponent(self, 'Arm')
+        error.checkInRange(angle, self.SHOULDER_MIN_DOM, self.SHOULDER_MAX_DOM)
+        self._shoulder.angle = (angle - self.SHOULDER_MIN_DOM) * self.MAX_ANGLE / (self.SHOULDER_MAX_DOM - self.SHOULDER_MIN_DOM)
 
 
     @elbow.setter
     def elbow(self, angle):
         """
-        Set the elbow angle.
+        Set the actual elbow angle. As the actual angle and input angle differ,
+        the value must be translated and stretched.
 
         :param angle: elbow angle in degrees
-        :raise ValueError: TODO, or the arm is off
+        :raise ValueError: if the angle is not between 5 and 125, or the arm is off
         """
-        error.checkComponent(self)
-        self._elbow.angle = angle
+        error.checkComponent(self, 'Arm')
+        error.checkInRange(angle, self.ELBOW_MIN_DOM, self.ELBOW_MAX_DOM)
+        self._elbow.angle = (angle - SELF.ELBOW_MIN_DOM) * self.MAX_ANGLE / (self.ELBOW_MAX_DOM - self.ELBOW_MIN_DOM)
 
 
     @wrist.setter
@@ -145,7 +165,7 @@ class Arm(Component):
         :param angle: wrist angle in degrees
         :raise ValueError: if the arm is off
         """
-        error.checkComponent(self)
+        error.checkComponent(self, 'Arm')
         self._wrist.angle = angle
 
 
@@ -157,6 +177,6 @@ class Arm(Component):
         :param angle: grabber angle in degrees
         :raise ValueError: if angle is not between 0 and 90, or the arm is off
         """
-        error.checkComponent(self)
+        error.checkComponent(self, 'Arm')
         error.checkInRange(angle, 0, self.GRABBER_DOM)
         self._grabber.angle = angle

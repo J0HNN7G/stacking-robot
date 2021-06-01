@@ -51,7 +51,8 @@ class Head(Component):
     @property
     def view(self):
         """
-        Get the view angle.
+        Get the actual view angle. As the actual angle and input angle differ,
+        the value must be translated and stretched.
 
         :return: view angle in degrees
         """
@@ -61,7 +62,8 @@ class Head(Component):
     @view.setter
     def view(self, angle):
         """
-        Set the view angle.
+        Set the view angle. As the actual angle and input angle differ,
+        the value must be translated and stretched.
 
         :param angle: view angle in degrees
         :raise ValueError: if the angle is not between 0 to 60, or
