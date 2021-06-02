@@ -16,6 +16,13 @@ class Ultrasonic(Component):
     # Duration that the ultrasonic sensor emits sound waves in seconds.
     EMIT_TIME = 0.000015
 
+    # Refactory period, so that sensor does not pick up old emissions when tested
+    # Repeatedly.
+    REF_TIME = 0.000002
+
+    # Error correction for ultrasonic sensor in metres.
+    ERR_CORR = 0.016
+
 
     def __init__(self, trigPin, echoPin):
         error.checkGPIO(trigPin)
@@ -38,7 +45,6 @@ class Ultrasonic(Component):
         self.status = True
 
 
-
     def cleanup(self):
         """
         Cleanup the ultrasonic sensor.
@@ -50,6 +56,8 @@ class Ultrasonic(Component):
     def distance(self):
         error.checkComponent(self, 'Ultrasonic sensor')
 
+        GPIO.output(self.trigPin, GPIO.LOW)
+        time.sleep(self.REF_TIME)
         GPIO.output(self.trigPin, GPIO.HIGH)
         time.sleep(self.EMIT_TIME)
         GPIO.output(self.trigPin, GPIO.LOW)
@@ -62,3 +70,10 @@ class Ultrasonic(Component):
         endTime = time.time()
 
         return (endTime - startTime) * self.SOUND_SPEED / 2
+
+
+    def meanAdjDist(self, numOfChecks):
+        data = []
+        for i in range(numOfChecks):
+            data.append(self.distance())
+        return round(sum(data) / numOfChecks) + self.ERR_CORR, 3)
