@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 
-
 import error
 from component import Component
 
 from adafruit_servokit import ServoKit
-
 
 class Arm(Component):
     """A class for controlling the arm of the robot."""
@@ -106,7 +104,7 @@ class Arm(Component):
 
         :return: elbow angle in degrees
         """
-        return self._elbow.angle * (self.ELBOW_MAX_DOM - self.ELBOW_MIN_DOM) / self.MAX_ANGLE + self.ELBOW_MIN_DOM
+        return (1 - self._elbow.angle / self.MAX_ANGLE) * (self.ELBOW_MAX_DOM - self.ELBOW_MIN_DOM) + self.ELBOW_MIN_DOM
 
 
     @property
@@ -154,7 +152,7 @@ class Arm(Component):
         """
         error.checkComponent(self, 'Arm')
         error.checkInRange(angle, self.ELBOW_MIN_DOM, self.ELBOW_MAX_DOM)
-        self._elbow.angle = (angle - self.ELBOW_MIN_DOM) * self.MAX_ANGLE / (self.ELBOW_MAX_DOM - self.ELBOW_MIN_DOM)
+        self._elbow.angle = self.MAX_ANGLE * (1 - (angle - self.ELBOW_MIN_DOM) / (self.ELBOW_MAX_DOM - self.ELBOW_MIN_DOM))
 
 
     @wrist.setter

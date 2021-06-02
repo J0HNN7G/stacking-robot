@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 
-
 import error
 from component import Component
 
 from adafruit_servokit import ServoKit
-
 
 class Head(Component):
     """A class for controlling the head of the robot."""

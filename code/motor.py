@@ -5,7 +5,6 @@ from component import Component
 
 import RPi.GPIO as GPIO
 
-
 class Motor(Component):
     """A class for controlling the wheel motors of the robot."""
 

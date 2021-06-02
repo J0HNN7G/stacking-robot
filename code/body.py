@@ -8,7 +8,6 @@ from direction import Direction
 import time
 import RPi.GPIO as GPIO
 
-
 class Body(Component):
     """A class for controlling the movement of the robot body."""
 

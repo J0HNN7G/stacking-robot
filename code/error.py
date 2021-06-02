@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-
 # Minimum GPIO numbering.
 GPIO_PIN_MIN = 1
 

@@ -16,8 +16,8 @@ class Ultrasonic(Component):
     # Duration that the ultrasonic sensor emits sound waves in seconds.
     EMIT_TIME = 0.000015
 
-    # Refactory period, so that sensor does not pick up old emissions when tested
-    # Repeatedly.
+    # Refactory period, so that sensor does not pick up old emissions
+    # when used repeatedly.
     REF_TIME = 0.000005
 
     # Error correction for ultrasonic sensor in metres.
