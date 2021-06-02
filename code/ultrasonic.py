@@ -18,7 +18,7 @@ class Ultrasonic(Component):
 
     # Refactory period, so that sensor does not pick up old emissions when tested
     # Repeatedly.
-    REF_TIME = 0.000002
+    REF_TIME = 0.000005
 
     # Error correction for ultrasonic sensor in metres.
     ERR_CORR = 0.016
@@ -76,4 +76,4 @@ class Ultrasonic(Component):
         data = []
         for i in range(numOfChecks):
             data.append(self.distance())
-        return round(sum(data) / numOfChecks) + self.ERR_CORR, 3)
+        return round(sum(data) / numOfChecks + self.ERR_CORR, 3)
