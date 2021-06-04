@@ -8,7 +8,6 @@ from adafruit_servokit import ServoKit
 class Head(Component):
     """A class for controlling the head of the robot."""
 
-
     # The domain of the function which controls the view angle.
     VIEW_DOM = 100
 
