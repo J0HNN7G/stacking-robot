@@ -25,8 +25,8 @@ class Head(Component):
         error.checkPCA9685(viewPin)
 
         self.status = False
-        self.kit = ServoKit(channels=16)
-        self._view = self.kit.servo[viewPin]
+        kit = ServoKit(channels=16)
+        self._view = kit.servo[viewPin]
         self.ultra = ultra
 
 
@@ -35,10 +35,11 @@ class Head(Component):
         Setup the view to be at the standard angle.
         """
         self._view.angle = self.VIEW_DOM
-        self.status = True
 
         if not self.ultra.status:
             self.ultra.setup()
+
+        self.status = True
 
 
     def cleanup(self):
@@ -46,8 +47,8 @@ class Head(Component):
         Cleanup the view by turning off the servo.
         """
         self._view.angle = None
-        self.status = False
         self.ultra.cleanup()
+        self.status = False
 
 
     @property

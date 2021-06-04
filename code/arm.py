@@ -56,11 +56,11 @@ class Arm(Component):
         error.checkPCA9685(grabberPin)
 
         self.status = False
-        self.kit = ServoKit(channels=16)
-        self._shoulder = self.kit.servo[shoulderPin]
-        self._elbow = self.kit.servo[elbowPin]
-        self._wrist = self.kit.servo[wristPin]
-        self._grabber = self.kit.servo[grabberPin]
+        kit = ServoKit(channels=16)
+        self._shoulder = kit.servo[shoulderPin]
+        self._elbow = kit.servo[elbowPin]
+        self._wrist = kit.servo[wristPin]
+        self._grabber = kit.servo[grabberPin]
 
 
     def setup(self):
