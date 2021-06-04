@@ -76,4 +76,4 @@ class Ultrasonic(Component):
         data = []
         for i in range(numOfChecks):
             data.append(self.distance())
-        return round(sum(data) / numOfChecks + self.ERR_CORR, 3)
+        return sum(data) / numOfChecks + self.ERR_CORR

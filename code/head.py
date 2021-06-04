@@ -18,11 +18,13 @@ class Head(Component):
     # The number of times we measure the distance to an object.
     NUM_TRIES = 100
 
-    AX_TO_SEN = math.sqrt(2 * (2.5 ** 2))
+    AX_TO_SEN = math.sqrt(2 * (0.025 ** 2))
 
-    X_ORIG_TO_AX = -3.5
+    X_ORIG_TO_AX = -0.035
 
-    Y_ORIG_TO_AX = -5
+    Y_ORIG_TO_AX = -0.05
+
+    PRECISION = 3
 
 
     def __init__(self, viewPin, ultra):
@@ -96,4 +98,4 @@ class Head(Component):
         y = self.Y_ORIG_TO_AX + self.AX_TO_SEN * math.sin(self.view - (1/4)*math.pi) \
             + senToObj * math.sin(self.view)
 
-        return x, y
+        return round(x, self.PRECISION), round(y, self.PRECISION)
