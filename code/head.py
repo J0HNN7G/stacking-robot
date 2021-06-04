@@ -3,6 +3,7 @@
 import error
 from component import Component
 
+import math
 from adafruit_servokit import ServoKit
 
 class Head(Component):
@@ -13,6 +14,15 @@ class Head(Component):
 
     # The actual range of the view angle.
     VIEW_RNG = 60
+
+    # The number of times we measure the distance to an object.
+    NUM_TRIES = 100
+
+    AX_TO_SEN = math.sqrt(2 * (2.5 ** 2))
+
+    X_ORIG_TO_AX = -3.5
+
+    Y_ORIG_TO_AX = -5
 
 
     def __init__(self, viewPin, ultra):
@@ -75,3 +85,15 @@ class Head(Component):
         error.checkComponent(self, 'Head')
         error.checkInRange(angle, 0, self.VIEW_RNG)
         self._view.angle = self.VIEW_DOM * (1 - angle / self.VIEW_RNG)
+
+    def objPos(self):
+        error.checkComponent(self.ultra, 'Ultrasonic')
+
+        senToObj = self.ultra.meanAdjDist(self.NUM_TRIES)
+
+        x = self.X_ORIG_TO_AX + self.AX_TO_SEN * math.cos(self.view + (3/4)*math.pi) \
+            - senToObj * math.cos(self.view)
+        y = self.Y_ORIG_TO_AX + self.AX_TO_SEN * math.sin(self.view - (1/4)*math.pi) \
+            + senToObj * math.sin(self.view)
+
+        return x, y
