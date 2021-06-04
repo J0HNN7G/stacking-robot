@@ -16,7 +16,7 @@ class Head(Component):
     VIEW_RNG = 60
 
     # The number of times we measure the distance to an object.
-    NUM_TRIES = 100
+    NUM_TRIES = 10
 
     AX_TO_SEN = math.sqrt(2 * (0.025 ** 2))
 
