@@ -15,7 +15,7 @@ class Head(Component):
     VIEW_RNG = 60
 
 
-    def __init__(self, viewPin):
+    def __init__(self, viewPin, ultra):
         """
         Initialise the head view movement.
 
@@ -27,6 +27,7 @@ class Head(Component):
         self.status = False
         self.kit = ServoKit(channels=16)
         self._view = self.kit.servo[viewPin]
+        self.ultra = ultra
 
 
     def setup(self):
@@ -36,6 +37,9 @@ class Head(Component):
         self._view.angle = self.VIEW_DOM
         self.status = True
 
+        if not self.ultra.status:
+            self.ultra.setup()
+
 
     def cleanup(self):
         """
@@ -43,6 +47,7 @@ class Head(Component):
         """
         self._view.angle = None
         self.status = False
+        self.ultra.cleanup()
 
 
     @property
@@ -69,6 +74,3 @@ class Head(Component):
         error.checkComponent(self, 'Head')
         error.checkInRange(angle, 0, self.VIEW_RNG)
         self._view.angle = self.VIEW_DOM * (1 - angle / self.VIEW_RNG)
-
-
-# TODO def xyDist(self):
