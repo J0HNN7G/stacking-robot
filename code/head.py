@@ -71,7 +71,7 @@ class Head(Component):
 
         :return: view angle in degrees
         """
-        return round(self.VIEW_RNG * (1 - self._view.angle / self.VIEW_DOM), 1)
+        return round(self.VIEW_RNG * (1 - self._view.angle / self.VIEW_DOM), 0)
 
 
     @view.setter
