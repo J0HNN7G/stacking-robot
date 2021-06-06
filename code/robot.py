@@ -24,10 +24,9 @@ class Robot(Component):
     def setup(self):
         if not self.head.status:
             self.head.setup()
-        if not self.body.status:
-            self.body.setup()
         if not self.arm.status:
             self.arm.setup()
+        self.body.setup()
         self.status = True
 
 
