@@ -110,6 +110,7 @@ class Head(Component):
 
         senToObj = self.ultra.meanAdjDist(self.NUM_TRIES)
 
+        print(senToObj)
         x = self.X_ORIG_TO_AX + self.AX_TO_SEN * math.cos(self.view * self.DEG_TO_RAD + (3/4)*math.pi) \
             - senToObj * math.cos(self.view)
         y = self.Y_ORIG_TO_AX + self.AX_TO_SEN * math.sin(self.view * self.DEG_TO_RAD - (1/4)*math.pi) \
