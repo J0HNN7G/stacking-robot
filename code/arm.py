@@ -151,7 +151,7 @@ class Arm(Component):
         """
         error.checkComponent(self, 'Arm')
         error.checkInRange(angle, self.ELBOW_MIN_DOM, self.ELBOW_MAX_DOM)
-        self._elbow.angle = (angle - self.ELBOW_MIN_DOM) * self.MAX_ANGLE / (self.ELBOW_MAX_DOM - self.ELBOW_MIN_DOM))
+        self._elbow.angle = (angle - self.ELBOW_MIN_DOM) * self.MAX_ANGLE / (self.ELBOW_MAX_DOM - self.ELBOW_MIN_DOM)
 
 
     @wrist.setter
