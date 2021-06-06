@@ -112,8 +112,8 @@ class Head(Component):
 
         print(senToObj)
         x = self.X_ORIG_TO_AX + self.AX_TO_SEN * math.cos(self.view * self.DEG_TO_RAD + (3/4)*math.pi) \
-            - senToObj * math.cos(self.view)
+            - senToObj * math.cos(self.view * self.DEG_TO_RAD)
         y = self.Y_ORIG_TO_AX + self.AX_TO_SEN * math.sin(self.view * self.DEG_TO_RAD - (1/4)*math.pi) \
-            + senToObj * math.sin(self.view)
+            + senToObj * math.sin(self.view * self.DEG_TO_RAD)
 
         return round(x, self.PRECISION), round(y, self.PRECISION)
