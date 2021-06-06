@@ -13,19 +13,19 @@ class Arm(Component):
     MAX_ANGLE = 180
 
     # Minimum angle in the actual domain for the shoulder angle.
-    SHOULDER_MIN_DOM = 22
+    SHOULDER_MIN_DOM = 5
 
     # Maximum angle in the actual domain for the shoulder angle.
-    SHOULDER_MAX_DOM = 175
+    SHOULDER_MAX_DOM = 158
 
     # Initial angle of the shoulder (actually 90 degrees).
     SHOULDER_INIT_ANGLE = 80
 
     # Minimum angle in the actual domain for the elbow angle.
-    ELBOW_MIN_DOM = 40
+    ELBOW_MIN_DOM = 5
 
     # Maximum angle in the actual domain for the elbow angle.
-    ELBOW_MAX_DOM = 175
+    ELBOW_MAX_DOM = 140
 
     # Initial angle of the elbow (actually 90 degrees).
     ELBOW_INIT_ANGLE = 105
@@ -93,7 +93,7 @@ class Arm(Component):
 
         :return: shoulder angle in degrees
         """
-        return self._shoulder.angle * (self.SHOULDER_MAX_DOM - self.SHOULDER_MIN_DOM) / self.MAX_ANGLE + self.SHOULDER_MIN_DOM
+        return (1 - self._shoulder.angle / self.MAX_ANGLE) * (self.SHOULDER_MAX_DOM - self.SHOULDER_MIN_DOM) + self.SHOULDER_MIN_DOM
 
 
     @property
@@ -104,8 +104,7 @@ class Arm(Component):
 
         :return: elbow angle in degrees
         """
-        return (1 - self._elbow.angle / self.MAX_ANGLE) * (self.ELBOW_MAX_DOM - self.ELBOW_MIN_DOM) + self.ELBOW_MIN_DOM
-
+        return self._elbow.angle * (self.ELBOW_MAX_DOM - self.ELBOW_MIN_DOM) / self.MAX_ANGLE + self.ELBOW_MIN_DOM
 
     @property
     def wrist(self):
@@ -138,7 +137,7 @@ class Arm(Component):
         """
         error.checkComponent(self, 'Arm')
         error.checkInRange(angle, self.SHOULDER_MIN_DOM, self.SHOULDER_MAX_DOM)
-        self._shoulder.angle = (angle - self.SHOULDER_MIN_DOM) * self.MAX_ANGLE / (self.SHOULDER_MAX_DOM - self.SHOULDER_MIN_DOM)
+        self._shoulder.angle = (1 - (angle - self.SHOULDER_MIN_DOM)) * self.MAX_ANGLE / (self.SHOULDER_MAX_DOM - self.SHOULDER_MIN_DOM)
 
 
     @elbow.setter
@@ -152,7 +151,7 @@ class Arm(Component):
         """
         error.checkComponent(self, 'Arm')
         error.checkInRange(angle, self.ELBOW_MIN_DOM, self.ELBOW_MAX_DOM)
-        self._elbow.angle = self.MAX_ANGLE * (1 - (angle - self.ELBOW_MIN_DOM) / (self.ELBOW_MAX_DOM - self.ELBOW_MIN_DOM))
+        self._elbow.angle = (angle - self.ELBOW_MIN_DOM) * self.MAX_ANGLE / (self.ELBOW_MAX_DOM - self.ELBOW_MIN_DOM))
 
 
     @wrist.setter

@@ -54,6 +54,13 @@ class Ultrasonic(Component):
 
 
     def distance(self):
+        """
+        Get the distance from an object to the front of the robot.
+
+        :return: the recorded distance of an object in front of the ultrasonic
+                 sensor in metres
+        :raise ValueError: if the ultrasonic sensor is off
+        """
         error.checkComponent(self, 'Ultrasonic sensor')
 
         GPIO.output(self.trigPin, GPIO.LOW)
@@ -73,6 +80,15 @@ class Ultrasonic(Component):
 
 
     def meanAdjDist(self, numOfChecks):
+        """
+        Get the mean error-adjusted distance of an object to the front
+        of the robot.
+
+        :param numOfChecks: number of times that the distance is recorded for the
+                            mean
+        :return: mean error-adjusted distance of an object in metres
+        :raise ValueError: if the ultrasonic sensor is off
+        """
         data = []
         for i in range(numOfChecks):
             data.append(self.distance())

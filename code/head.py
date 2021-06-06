@@ -9,6 +9,7 @@ from adafruit_servokit import ServoKit
 class Head(Component):
     """A class for controlling the head of the robot."""
 
+
     # The domain of the function which controls the view angle.
     VIEW_DOM = 100
 
@@ -18,12 +19,16 @@ class Head(Component):
     # The number of times we measure the distance to an object.
     NUM_TRIES = 10
 
+    # Distance from axis of rotation for the head and the ultrasonic sensor
     AX_TO_SEN = math.sqrt(2 * (0.025 ** 2))
 
+    # difference between x values of the shoulder axis to axis of rotation for the head
     X_ORIG_TO_AX = -0.035
 
+    # difference between y values of the shoulder axis to axis of rotation for the head
     Y_ORIG_TO_AX = -0.05
 
+    # Precision of object coordinates calculated with ultrasonic sensor
     PRECISION = 3
 
 
@@ -88,8 +93,17 @@ class Head(Component):
         error.checkInRange(angle, 0, self.VIEW_RNG)
         self._view.angle = self.VIEW_DOM * (1 - angle / self.VIEW_RNG)
 
+
     def objPos(self):
-        error.checkComponent(self.ultra, 'Ultrasonic')
+        """
+        Calculate the cartesian coordinates of an object with the ultrasonic
+        sensor relative to the axis of the shoulder.
+
+        :return: the cartesian position of the object in metres relative to the
+                 axis of the shoulder
+        :raise ValueError: if the ultrasonic sensor is off
+        """
+        error.checkComponent(self.ultra, 'Ultrasonic sensor')
 
         senToObj = self.ultra.meanAdjDist(self.NUM_TRIES)
 
