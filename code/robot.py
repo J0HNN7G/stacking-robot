@@ -57,3 +57,5 @@ class Robot(Component):
                 self.arm.grabber = 90
                 time.sleep(self.CLOSE_TIME)
                 self.arm.setup()
+                result = True
+        return result
