@@ -29,7 +29,7 @@ class Head(Component):
     Y_ORIG_TO_AX = -0.05
 
     # Conversion factor from radians to degrees.
-    DEG_TO_RAD = math.pi * 180
+    DEG_TO_RAD = math.pi / 180
 
     # Precision of object coordinates calculated with ultrasonic sensor
     PRECISION = 3
