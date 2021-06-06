@@ -42,7 +42,9 @@ class Robot(Component):
 
         result = False
         objPos = self.head.objPos()
+        print(objPos)
         angles = calcAngles(objPos)
+        print(angles)
 
         if angles is not None:
             shoulderAngle, elbowAngle = angles
