@@ -31,9 +31,9 @@ class Robot(Component):
 
 
     def cleanup(self):
-        head.cleanup()
-        body.cleanup()
-        arm.cleanup()
+        self.head.cleanup()
+        self.body.cleanup()
+        self.arm.cleanup()
         self.status = False
 
 

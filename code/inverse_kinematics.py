@@ -32,7 +32,9 @@ def calcAngles(objPos):
     xObj, yObj = objPos
     # distance between shoulder axis and target
     tDist = round( math.sqrt(xObj**2 + yObj**2), PRECISION)
-
+    print(math.sqrt(xObj**2 + yObj**2))
+    print((tDist > S_LEN + E_LEN))
+    print((tDist < E_LEN - S_LEN))
     if not ((tDist > S_LEN + E_LEN) or (tDist < E_LEN - S_LEN)):
         # distance from shoulder axis to chord between potential elbow positions
         sDist = (S_LEN**2 - E_LEN**2 + tDist**2) / (2*tDist)

@@ -28,6 +28,9 @@ class Head(Component):
     # difference between y values of the shoulder axis to axis of rotation for the head
     Y_ORIG_TO_AX = -0.05
 
+    # Conversion factor from radians to degrees.
+    DEG_TO_RAD = math.pi * 180
+
     # Precision of object coordinates calculated with ultrasonic sensor
     PRECISION = 3
 
@@ -107,9 +110,9 @@ class Head(Component):
 
         senToObj = self.ultra.meanAdjDist(self.NUM_TRIES)
 
-        x = self.X_ORIG_TO_AX + self.AX_TO_SEN * math.cos(self.view + (3/4)*math.pi) \
+        x = self.X_ORIG_TO_AX + self.AX_TO_SEN * math.cos(self.view * self.DEG_TO_RAD + (3/4)*math.pi) \
             - senToObj * math.cos(self.view)
-        y = self.Y_ORIG_TO_AX + self.AX_TO_SEN * math.sin(self.view - (1/4)*math.pi) \
+        y = self.Y_ORIG_TO_AX + self.AX_TO_SEN * math.sin(self.view * self.DEG_TO_RAD - (1/4)*math.pi) \
             + senToObj * math.sin(self.view)
 
         return round(x, self.PRECISION), round(y, self.PRECISION)
