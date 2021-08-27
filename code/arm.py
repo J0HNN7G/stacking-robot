@@ -8,6 +8,8 @@ from adafruit_servokit import ServoKit
 class Arm(Component):
     """A class for controlling the arm of the robot."""
 
+    # The minimum angle in the input domain for any angle.
+    MIN_ANGLE = 0
 
     # The maximum angle in the input domain for any angle.
     MAX_ANGLE = 180
@@ -175,5 +177,5 @@ class Arm(Component):
         :raise ValueError: if angle is not between 0 and 90, or the arm is off
         """
         error.checkComponent(self, 'Arm')
-        error.checkInRange(angle, 0, self.GRABBER_DOM)
+        error.checkInRange(angle, self.MIN_ANGLE, self.GRABBER_DOM)
         self._grabber.angle = angle
