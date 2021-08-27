@@ -20,13 +20,13 @@ class Head(Component):
     NUM_TRIES = 10
 
     # Distance from axis of rotation for the head and the ultrasonic sensor
-    AX_TO_SEN = math.sqrt(2 * (0.025 ** 2))
+    AX_TO_SEN = math.sqrt(0.0265 ** 2 + 0.025 ** 2)
 
     # difference between x values of the shoulder axis to axis of rotation for the head
-    X_ORIG_TO_AX = -0.035
+    X_ORIG_TO_AX = -0.0325
 
     # difference between y values of the shoulder axis to axis of rotation for the head
-    Y_ORIG_TO_AX = -0.05
+    Y_ORIG_TO_AX = -0.0475
 
     # Conversion factor from radians to degrees.
     DEG_TO_RAD = math.pi / 180
