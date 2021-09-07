@@ -5,19 +5,37 @@ import time
 import math
 
 class Control():
+    """A class for controlling all the arm components at the same time."""'
 
+    # Angle to increment each component by per loop in degrees.
     ANGLE_INC = 5
+
+    # Absolute tolerance for difference between desired angle and actual angle of components.
     ABS_TOL = 1
+
+    # Time between each angle increment.
     SLEEPY_TIME = 0.01
 
+
     def __init__(self, arm):
+        """
+        Initialise the arm control.
+
+        :param arm: arm component
+        """
         self.arm = arm
         self.shoulderAngle = None
         self.elbowAngle = None
         self.wristAngle = None
         self.grabberAngle = None
 
+
     def execute(self):
+        """
+        Execute angles on arm.
+
+        :raise ValueError: if the arm is off
+        """
         error.checkComponent(self.arm, 'Arm')
 
         while not((self.shoulderAngle is None) and (self.elbowAngle is None) and (self.wristAngle is None) and (self.grabberAngle is None)):
@@ -56,18 +74,46 @@ class Control():
 
             time.sleep(self.SLEEPY_TIME)
 
+
     def shoulder(self, angle):
+        """
+        Set the shoulder angle to be executed.
+
+        :param angle: shoulder angle in degrees
+        :raise ValueError: if angle is not between 22 and 175
+        """
         error.checkInRange(angle, self.arm.SHOULDER_MIN_DOM, self.arm.SHOULDER_MAX_DOM)
         self.shoulderAngle = angle
 
+
     def elbow(self, angle):
+        """
+        Set the elbow angle to be executed.
+
+        :param angle: elbow angle in degrees
+        :raise ValueError: if the angle is not between 5 and 125
+        """
         error.checkInRange(angle, self.arm.ELBOW_MIN_DOM, self.arm.ELBOW_MAX_DOM)
         self.elbowAngle = angle
 
+
     def wrist(self, angle):
+        """
+        Set the wrist angle to be executed.
+
+        :param angle: wrist angle in degrees
+        :raise ValueError: if angle is not between 0 and 180
+        """
         error.checkInRange(angle, self.arm.MIN_ANGLE, self.arm.MAX_ANGLE)
         self.wristAngle = angle
 
+
     def grabber(self, angle):
+        """
+        Set the grabber angle to be executed.
+
+        :param angle: grabber angle in degrees
+        :raise ValueError: if angle is not between 0 and 90
+        """
         error.checkInRange(angle, self.arm.MIN_ANGLE, self.arm.GRABBER_DOM)
         self.grabberAngle = angle

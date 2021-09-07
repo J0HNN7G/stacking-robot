@@ -164,7 +164,7 @@ class Arm(Component):
         Set the wrist angle.
 
         :param angle: wrist angle in degrees
-        :raise ValueError: if the arm is off
+        :raise ValueError: if angle is not between 0 and 180, or the arm is off
         """
         error.checkComponent(self, 'Arm')
         self._wrist.angle = angle

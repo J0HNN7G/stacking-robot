@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 
 import error
 from component import Component
@@ -7,12 +8,14 @@ from arm import Arm
 import time
 
 class Robot(Component):
+    """A class for controlling the robot."""
 
     # Time for grabber to open
     OPEN_TIME = 0.5
 
     # Time for grabber to grab
     CLOSE_TIME = 1
+
 
     def __init__(self, head, body, arm):
         self.status = False
