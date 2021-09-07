@@ -32,7 +32,7 @@ class Control():
                 change = min(abs(angleDiff), self.ANGLE_INC)*math.copysign(1, angleDiff)
                 self.arm.shoulder = self.arm.shoulder + change
 
-                if math.isclose(self.arm.shoulder, self.shoulderAngle. abs_tol=self.ABS_TOL):
+                if math.isclose(self.arm.shoulder, self.shoulderAngle, abs_tol=self.ABS_TOL):
                     self.shoulderAngle = None
 
             if self.elbowAngle is not None:
@@ -40,7 +40,7 @@ class Control():
                 change = min(abs(angleDiff), self.ANGLE_INC)*math.copysign(1, angleDiff)
                 self.arm.elbow = self.arm.elbow + change
 
-                if math.isclose(self.arm.elbow, self.elbowAngle. abs_tol=self.ABS_TOL):
+                if math.isclose(self.arm.elbow, self.elbowAngle, abs_tol=self.ABS_TOL):
                     self.elbowAngle = None
 
             if self.wristAngle is not None:
@@ -48,7 +48,7 @@ class Control():
                 change = min(abs(angleDiff), self.ANGLE_INC)*math.copysign(1, angleDiff)
                 self.arm.wrist = self.arm.wrist + change
 
-                if math.isclose(self.arm.wrist, self.wristAngle. abs_tol=self.ABS_TOL):
+                if math.isclose(self.arm.wrist, self.wristAngle, abs_tol=self.ABS_TOL):
                     self.wristAngle = None
 
             if self.grabberAngle is not None:
@@ -56,7 +56,7 @@ class Control():
                 change = min(abs(angleDiff), self.ANGLE_INC)*math.copysign(1, angleDiff)
                 self.arm.grabber = self.arm.grabber + change
 
-                if math.isclose(self.arm.grabber, self.grabberAngle. abs_tol=self.ABS_TOL):
+                if math.isclose(self.arm.grabber, self.grabberAngle, abs_tol=self.ABS_TOL):
                     self.grabberAngle = None
 
             time.sleep(self.SLEEPY_TIME)
