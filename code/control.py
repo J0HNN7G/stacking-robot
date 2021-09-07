@@ -8,7 +8,7 @@ class Control():
 
     ANGLE_INC = 5
     ABS_TOL = 1
-    SLEEPY_TIME = 0.06
+    SLEEPY_TIME = 0.01
 
     def __init__(self, arm):
         self.arm = arm
