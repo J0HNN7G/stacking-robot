@@ -18,40 +18,40 @@ class Control():
 
     def execute(self):
         error.checkComponent(self.arm, 'Arm')
-        
+
         while not((self.shoulderAngle is None) and (self.elbowAngle is None) and
                   (self.wristAngle is None) and (self.grabberAngle is None)):
 
             if self.shoulderAngle is not None:
-                angleDiff = self.shoulderAngle - self.arm.shoulder()
+                angleDiff = self.shoulderAngle - self.arm.shoulder
                 change = min(abs(angleDiff), self.ANGLE_INC)*math.copysign(1, angleDiff)
-                self.arm.shoulder(self.arm.shoulder() + change)
+                self.arm.shoulder = self.arm.shoulder + change
 
-                if self.arm.shoulder() == self.shoulderAngle:
+                if self.arm.shoulder == self.shoulderAngle:
                     self.shoulderAngle = None
 
             if self.elbowAngle is not None:
-                angleDiff = self.elbowAngle - self.arm.elbow()
+                angleDiff = self.elbowAngle - self.arm.elbow
                 change = min(abs(angleDiff), self.ANGLE_INC)*math.copysign(1, angleDiff)
-                self.arm.elbow(self.arm.elbow() + change)
+                self.arm.elbow = self.arm.elbow + change
 
-                if self.arm.elbow() == self.elbowAngle:
+                if self.arm.elbow == self.elbowAngle:
                     self.elbowAngle = None
 
             if self.wristAngle is not None:
-                angleDiff = self.wristAngle - self.arm.wrist()
+                angleDiff = self.wristAngle - self.arm.wrist
                 change = min(abs(angleDiff), self.ANGLE_INC)*math.copysign(1, angleDiff)
-                self.arm.wrist(self.arm.wrist() + change)
+                self.arm.wrist = self.arm.wrist + change
 
-                if self.arm.wrist() == self.wristAngle:
+                if self.arm.wrist == self.wristAngle:
                     self.wristAngle = None
 
             if self.grabberAngle is not None:
-                angleDiff = self.grabberAngle - self.arm.grabber()
+                angleDiff = self.grabberAngle - self.arm.grabber
                 change = min(abs(angleDiff), self.ANGLE_INC)*math.copysign(1, angleDiff)
-                self.arm.grabber(self.arm.grabber() + change)
+                self.arm.grabber = self.arm.grabber + change
 
-                if self.arm.grabber() == self.grabberAngle:
+                if self.arm.grabber == self.grabberAngle:
                     self.grabberAngle = None
 
             time.sleep(self.SLEEPY_TIME)
