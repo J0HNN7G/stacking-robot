@@ -7,6 +7,7 @@ import math
 class Control():
 
     ANGLE_INC = 5
+    ABS_TOL = 1
     SLEEPY_TIME = 0.1
 
     def __init__(self, arm):
@@ -24,14 +25,14 @@ class Control():
             print(self.shoulderAngle, self.arm.shoulder)
             print(self.elbowAngle, self.arm.elbow)
             print(self.wristAngle, self.arm.wrist)
-            print(self.grabberAngle, self.arm.grabber)      
+            print(self.grabberAngle, self.arm.grabber)
 
             if self.shoulderAngle is not None:
                 angleDiff = self.shoulderAngle - self.arm.shoulder
                 change = min(abs(angleDiff), self.ANGLE_INC)*math.copysign(1, angleDiff)
                 self.arm.shoulder = self.arm.shoulder + change
 
-                if self.arm.shoulder == self.shoulderAngle:
+                if math.isclose(self.arm.shoulder, self.shoulderAngle. abs_tol=self.ABS_TOL):
                     self.shoulderAngle = None
 
             if self.elbowAngle is not None:
@@ -39,7 +40,7 @@ class Control():
                 change = min(abs(angleDiff), self.ANGLE_INC)*math.copysign(1, angleDiff)
                 self.arm.elbow = self.arm.elbow + change
 
-                if self.arm.elbow == self.elbowAngle:
+                if math.isclose(self.arm.elbow, self.elbowAngle. abs_tol=self.ABS_TOL):
                     self.elbowAngle = None
 
             if self.wristAngle is not None:
@@ -47,7 +48,7 @@ class Control():
                 change = min(abs(angleDiff), self.ANGLE_INC)*math.copysign(1, angleDiff)
                 self.arm.wrist = self.arm.wrist + change
 
-                if self.arm.wrist == self.wristAngle:
+                if math.isclose(self.arm.wrist, self.wristAngle. abs_tol=self.ABS_TOL):
                     self.wristAngle = None
 
             if self.grabberAngle is not None:
@@ -55,7 +56,7 @@ class Control():
                 change = min(abs(angleDiff), self.ANGLE_INC)*math.copysign(1, angleDiff)
                 self.arm.grabber = self.arm.grabber + change
 
-                if self.arm.grabber == self.grabberAngle:
+                if math.isclose(self.arm.grabber, self.grabberAngle. abs_tol=self.ABS_TOL):
                     self.grabberAngle = None
 
             time.sleep(self.SLEEPY_TIME)
