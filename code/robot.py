@@ -10,6 +10,7 @@ import time
 class Robot(Component):
     """A class for controlling the robot."""
 
+
     # Time for grabber to open
     OPEN_TIME = 0.5
 
@@ -18,6 +19,13 @@ class Robot(Component):
 
 
     def __init__(self, head, body, arm):
+        """
+        Initialise the robot components
+
+        :param head: robot head component
+        :param body: robot body component
+        :param arm: robot arm component
+        """
         self.status = False
         self.head = head
         self.body = body
@@ -25,6 +33,9 @@ class Robot(Component):
 
 
     def setup(self):
+        """
+        Setup all the robot components
+        """
         if not self.head.status:
             self.head.setup()
         if not self.arm.status:
@@ -34,6 +45,9 @@ class Robot(Component):
 
 
     def cleanup(self):
+        """
+        Cleanup all the robots components.
+        """
         self.head.cleanup()
         self.body.cleanup()
         self.arm.cleanup()
@@ -41,13 +55,16 @@ class Robot(Component):
 
 
     def pickup(self):
+        """
+        Pick up an object close to the front of the robot.
+
+        :return: True if the pick up was possible, otherwise False
+        """
         error.checkComponent(self, 'Robot')
 
         result = False
         objPos = self.head.objPos()
-        print(objPos)
         angles = calcAngles(objPos)
-        print(angles)
 
         if angles is not None:
             shoulderAngle, elbowAngle = angles

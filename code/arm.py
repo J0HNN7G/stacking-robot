@@ -110,6 +110,7 @@ class Arm(Component):
         """
         return self._elbow.angle * (self.ELBOW_MAX_DOM - self.ELBOW_MIN_DOM) / self.MAX_ANGLE + self.ELBOW_MIN_DOM
 
+
     @property
     def wrist(self):
         """
