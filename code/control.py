@@ -8,7 +8,7 @@ class Control():
 
     ANGLE_INC = 5
     ABS_TOL = 1
-    SLEEPY_TIME = 0.1
+    SLEEPY_TIME = 0.06
 
     def __init__(self, arm):
         self.arm = arm
@@ -21,11 +21,6 @@ class Control():
         error.checkComponent(self.arm, 'Arm')
 
         while not((self.shoulderAngle is None) and (self.elbowAngle is None) and (self.wristAngle is None) and (self.grabberAngle is None)):
-
-            print(self.shoulderAngle, self.arm.shoulder)
-            print(self.elbowAngle, self.arm.elbow)
-            print(self.wristAngle, self.arm.wrist)
-            print(self.grabberAngle, self.arm.grabber)
 
             if self.shoulderAngle is not None:
                 angleDiff = self.shoulderAngle - self.arm.shoulder
