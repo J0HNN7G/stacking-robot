@@ -2,6 +2,7 @@
 
 import error
 from component import Component
+from control import Control
 
 from adafruit_servokit import ServoKit
 
@@ -63,6 +64,7 @@ class Arm(Component):
         self._elbow = kit.servo[elbowPin]
         self._wrist = kit.servo[wristPin]
         self._grabber = kit.servo[grabberPin]
+        self.control = Control(self)
 
 
     def setup(self):

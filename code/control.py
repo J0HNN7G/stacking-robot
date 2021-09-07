@@ -17,6 +17,8 @@ class Control():
         self.grabberAngle = None
 
     def execute(self):
+        error.checkComponent(self.arm, 'Arm')
+        
         while not((self.shoulderAngle is None) and (self.elbowAngle is None) and
                   (self.wristAngle is None) and (self.grabberAngle is None)):
 
