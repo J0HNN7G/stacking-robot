@@ -83,7 +83,6 @@ class Control():
         :param angle: shoulder angle in degrees
         :raise ValueError: if angle is not between 22 and 175
         """
-        error.checkInRange(angle, self.arm.SHOULDER_MIN_DOM, self.arm.SHOULDER_MAX_DOM)
         self.shoulderAngle = angle
 
 
@@ -94,7 +93,6 @@ class Control():
         :param angle: elbow angle in degrees
         :raise ValueError: if the angle is not between 5 and 125
         """
-        error.checkInRange(angle, self.arm.ELBOW_MIN_DOM, self.arm.ELBOW_MAX_DOM)
         self.elbowAngle = angle
 
 
@@ -105,7 +103,6 @@ class Control():
         :param angle: wrist angle in degrees
         :raise ValueError: if angle is not between 0 and 180
         """
-        error.checkInRange(angle, self.arm.MIN_ANGLE, self.arm.MAX_ANGLE)
         self.wristAngle = angle
 
 
@@ -116,5 +113,4 @@ class Control():
         :param angle: grabber angle in degrees
         :raise ValueError: if angle is not between 0 and 90
         """
-        error.checkInRange(angle, self.arm.MIN_ANGLE, self.arm.GRABBER_DOM)
         self.grabberAngle = angle
