@@ -5,7 +5,7 @@ import time
 import math
 
 class Control():
-    """A class for controlling all the arm components at the same time."""'
+    """A class for controlling all the arm components at the same time."""
 
 
     # Angle to increment each component by per loop in degrees.
