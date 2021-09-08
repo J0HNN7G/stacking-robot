@@ -77,11 +77,11 @@ class Robot(Component):
                 self.arm.control.shoulder(shoulderAngle)
                 self.arm.control.shoulder(elbowAngle)
                 self.arm.control.execute()
-                time.sleep(self.CLOSE_TIME)
+                time.sleep(self.CLOSE_TIME * 2)
 
                 self.arm.control.grabber(90)
                 self.arm.control.execute()
-                time.sleep(self.CLOSE_TIME)
+                time.sleep(self.CLOSE_TIME * 2)
 
                 self.arm.control.shoulder(90)
                 self.arm.control.elbow(90)
