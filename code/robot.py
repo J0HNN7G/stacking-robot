@@ -72,16 +72,16 @@ class Robot(Component):
             if (Arm.SHOULDER_MIN_DOM <= shoulderAngle <= Arm.SHOULDER_MAX_DOM) and (Arm.ELBOW_MIN_DOM <= elbowAngle <= Arm.ELBOW_MAX_DOM):
                 self.arm.control.grabber(0)
                 self.arm.control.execute()
-                time.sleep(OPEN_TIME)
+                time.sleep(self.OPEN_TIME)
 
                 self.arm.control.shoulder(shoulderAngle)
                 self.arm.control.shoulder(elbowAngle)
                 self.arm.control.execute()
-                time.sleep(CLOSE_TIME)
+                time.sleep(self.CLOSE_TIME)
 
                 self.arm.control.grabber(90)
                 self.arm.control.execute()
-                time.sleep(CLOSE_TIME)
+                time.sleep(self.CLOSE_TIME)
 
                 self.arm.control.shoulder(90)
                 self.arm.control.elbow(90)
