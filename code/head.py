@@ -23,7 +23,7 @@ class Head(Component):
     AX_TO_SEN = math.sqrt(0.0265 ** 2 + 0.025 ** 2)
 
     # difference between x values of the shoulder axis to axis of rotation for the head
-    X_ORIG_TO_AX = -0.0325
+    X_ORIG_TO_AX = -0.0375
 
     # difference between y values of the shoulder axis to axis of rotation for the head
     Y_ORIG_TO_AX = -0.0475
