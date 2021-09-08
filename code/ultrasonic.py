@@ -21,7 +21,8 @@ class Ultrasonic(Component):
     REF_TIME = 0.000005
 
     # Error correction for ultrasonic sensor in metres.
-    ERR_CORR = 0.016
+    #ERR_CORR = 0.016
+    ERR_CORR = 0
 
 
     def __init__(self, trigPin, echoPin):
