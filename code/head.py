@@ -5,6 +5,9 @@ from component import Component
 
 import math
 from adafruit_servokit import ServoKit
+from picamera import PiCamera
+import cv2
+import numpy as np
 
 class Head(Component):
     """A class for controlling the head of the robot."""
@@ -33,6 +36,45 @@ class Head(Component):
 
     # Precision of object coordinates calculated with ultrasonic sensor
     PRECISION = 3
+
+    # Camera resolution width in pixels.
+    IMG_WIDTH = 640
+
+    # Camera resolution height in pixels.
+    IMG_HEIGHT = 480
+
+    # Horizontal center of camera images in pixels.
+    CENTER_IMG_X = IMG_WIDTH // 2
+
+    # Vertical center of camera images in pixels.
+    CENTER_IMG_Y = IMG_HEIGHT // 2
+
+    # Minimum area of object in image.
+    MIN_AREA = 250
+
+    # Maximum area of object in image.
+    MAX_AREA = 10 ** 5
+
+    # Camera framerate.
+    FRAMERATE = 32
+
+    # Minimum yellow HSV.
+    Y_HSV_MIN = np.array([17,100,50])
+
+    # Maximum yellow HSV.
+    Y_HSV_MAX = np.array([37,255,255])
+
+    # Minimum blue HSV.
+    B_HSV_MIN = np.array([108,100,50])
+
+    # Maximum blue HSV.
+    B_HSV_MAX = np.array([118,255,255])
+
+    # Minimum red HSV.
+    R_HSV_MIN = np.array([169,100,50])
+
+    # Maximum red HSV.
+    R_HSV_MAX = np.array([179,255,255]))
 
 
     def __init__(self, viewPin, ultra):
@@ -117,3 +159,66 @@ class Head(Component):
             + senToObj * math.sin(self.view * self.DEG_TO_RAD)
 
         return round(x, self.PRECISION), round(y, self.PRECISION)
+
+
+    def allObjCamPos(self):
+        """
+        Get the position of all blocks in camera view.
+        """
+
+        with PiCamera() as camera:
+            camera = PiCamera()
+            camera.resolution = (self.IMG_WIDTH, self.IMG_HEIGHT)
+            camera.framerate = self.FRAMERATE
+
+            stream = io.BytesIO()
+            camera.start_preview()
+            time.sleep(2)
+            camera.capture(stream, format='jpeg')
+            data = np.fromstring(stream.getvalue(), dtype=np.uint8)
+            camera.stop_preview()
+
+            img = cv2.imdecode(data, 1)
+            hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+
+            yellowMask = cv2.inRange(hsv, self.Y_HSV_MIN, self.Y_HSV_MAX)
+            yellowObj = findImgObjProp(yellowMask)
+
+            blueMask = cv2.inRange(hsv, self.B_HSV_MIN, self.B_HSV_MAX)
+            blueObj = findImgObjProp(blueMask)
+
+            redMask = cv2.inRange(hsv, self.R_HSV_MIN, self.R_HSV_MAX)
+            redObj = findImgObjProp(redMask)
+
+            allMask = cv2.bitwise_or(cv2.bitwise_or(yellowMask, blueMask), redMask)
+            result = cv2.bitwise_and(img, img, mask=allMask)
+
+            cv2.imshow("Image", img)
+            cv2.imshow("HSV", hsv)
+            cv2.imshow("Result", result)
+
+            return (yellowObj, blueObj, redObj)
+
+
+
+    def findImgObjProp(colMask):
+        objA = 0
+        objX = 0
+        objY = 0
+
+        contours, _ = cv2.findContours(colMask, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+        for contour in contours:
+            x, y, curW, curH = cv2.boundingRect(contour)
+            curA = curW * curH
+            curX = x + (curW // 2)
+            curY = y + (curH // 2)
+            if objA < curA:
+                objA = curA
+                objX = curX
+                objY = curY
+
+        if objA > 0:
+            imgObjProp = [objA, objX, objY]
+        else:
+            imgObjProp = None
+        return imgObjProp
