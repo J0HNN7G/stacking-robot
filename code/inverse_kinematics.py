@@ -7,7 +7,7 @@ import math
 S_LEN = 0.065
 
 # The length of the elbow in metres.
-E_LEN = 0.1275
+E_LEN = 0.12
 
 # The precision of the angles returned.
 PRECISION = 3
