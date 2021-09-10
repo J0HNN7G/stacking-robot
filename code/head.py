@@ -59,22 +59,28 @@ class Head(Component):
     FRAMERATE = 32
 
     # Minimum yellow HSV.
-    Y_HSV_MIN = np.array([17,100,50])
+    G_HSV_MIN = np.array([50,150,20])
 
     # Maximum yellow HSV.
-    Y_HSV_MAX = np.array([37,255,255])
+    G_HSV_MAX = np.array([90,255,255])
 
     # Minimum blue HSV.
-    B_HSV_MIN = np.array([108,100,50])
+    B_HSV_MIN = np.array([100,180,20])
 
     # Maximum blue HSV.
-    B_HSV_MAX = np.array([118,255,255])
+    B_HSV_MAX = np.array([120,255,255])
 
-    # Minimum red HSV.
-    R_HSV_MIN = np.array([169,100,50])
+    # Minimum red bottom hue HSV.
+    R_HSV_BMIN = np.array([0,100,20])
 
-    # Maximum red HSV.
-    R_HSV_MAX = np.array([179,255,255]))
+    # Maximum red bottom hue HSV.
+    R_HSV_BMAX = np.array([10,255,255]))
+
+    # Minimum red top hue HSV.
+    R_HSV_TMIN = np.array([169,100,20])
+
+    # Maximum red top hue HSV.
+    R_HSV_TMAX = np.array([179,255,255]))
 
 
     def __init__(self, viewPin, ultra):
@@ -187,7 +193,9 @@ class Head(Component):
             blueMask = cv2.inRange(hsv, self.B_HSV_MIN, self.B_HSV_MAX)
             blueObj = findImgObjProp(blueMask)
 
-            redMask = cv2.inRange(hsv, self.R_HSV_MIN, self.R_HSV_MAX)
+            redBMask = cv2.inRange(hsv, self.R_HSV_BMIN, self.R_HSV_BMAX)
+            redTMask = cv2.inRange(hsv, self.R_HSV_TMIN, self.R_HSV_TMAX)
+            redMask = cv2.bitwise_or(redBMask, redTMask)
             redObj = findImgObjProp(redMask)
 
             allMask = cv2.bitwise_or(cv2.bitwise_or(yellowMask, blueMask), redMask)
