@@ -77,13 +77,13 @@ class Head(Component):
     R_HSV_BMIN = np.array([0,100,20])
 
     # Maximum red bottom hue HSV.
-    R_HSV_BMAX = np.array([10,255,255]))
+    R_HSV_BMAX = np.array([10,255,255])
 
     # Minimum red top hue HSV.
     R_HSV_TMIN = np.array([169,100,20])
 
     # Maximum red top hue HSV.
-    R_HSV_TMAX = np.array([179,255,255]))
+    R_HSV_TMAX = np.array([179,255,255])
 
 
     def __init__(self, viewPin, ultra):
@@ -188,8 +188,8 @@ class Head(Component):
             img = cv2.imdecode(data, 1)
             hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 
-            yellowMask = cv2.inRange(hsv, self.Y_HSV_MIN, self.Y_HSV_MAX)
-            yellowObj = findObjProp(yellowMask)
+            greenMask = cv2.inRange(hsv, self.G_HSV_MIN, self.G_HSV_MAX)
+            greenObj = findObjProp(greenMask)
 
             blueMask = cv2.inRange(hsv, self.B_HSV_MIN, self.B_HSV_MAX)
             blueObj = findObjProp(blueMask)
@@ -199,16 +199,10 @@ class Head(Component):
             redMask = cv2.bitwise_or(redBMask, redTMask)
             redObj = findObjProp(redMask)
 
-            allMask = cv2.bitwise_or(cv2.bitwise_or(yellowMask, blueMask), redMask)
+            allMask = cv2.bitwise_or(cv2.bitwise_or(greenMask, blueMask), redMask)
             result = cv2.bitwise_and(img, img, mask=allMask)
 
-            cv2.imshow("Image", img)
-            cv2.imshow("Result", result)
-
-            time.sleep(5)
-            cv2.destroyAllWindows()
-
-            return (yellowObj, blueObj, redObj)
+            return (greenObj, blueObj, redObj)
 
 
 def findObjProp(colMask):
