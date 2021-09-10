@@ -170,42 +170,77 @@ class Head(Component):
         return round(x, self.PRECISION), round(y, self.PRECISION)
 
 
-    def allObjCamProp(self):
+    def allObjCamProp(self, numOfChecks):
         """
-        Get the position of all blocks in camera view.
+        Get the properties of all blocks in camera view.
         """
-
         with PiCamera() as camera:
             camera.resolution = (self.IMG_WIDTH, self.IMG_HEIGHT)
-
-            stream = io.BytesIO()
             camera.start_preview()
-            time.sleep(2)
-            camera.capture(stream, format='jpeg')
-            data = np.fromstring(stream.getvalue(), dtype=np.uint8)
+            time.sleep(1)
+
+            redObjs = []
+            greenObjs = []
+            blueObjs = []
+
+            for i in range(numOfChecks):
+                with io.BytesIO() as stream:
+                    camera.capture(stream, format='jpeg')
+                    data = np.fromstring(stream.getvalue(), dtype=np.uint8)
+
+                    img = cv2.imdecode(data, 1)
+                    hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+
+                    redBMask = cv2.inRange(hsv, self.R_HSV_BMIN, self.R_HSV_BMAX)
+                    redTMask = cv2.inRange(hsv, self.R_HSV_TMIN, self.R_HSV_TMAX)
+                    redMask = cv2.bitwise_or(redBMask, redTMask)
+                    redObj = findObjProp(redMask)
+                    if redObj:
+                        redObjs.append(redObj)
+
+                    greenMask = cv2.inRange(hsv, self.G_HSV_MIN, self.G_HSV_MAX)
+                    greenObj = findObjProp(greenMask)
+                    if greenObj:
+                        greenObjs.append(greenObj)
+
+                    blueMask = cv2.inRange(hsv, self.B_HSV_MIN, self.B_HSV_MAX)
+                    blueObj = findObjProp(blueMask)
+                    if blueObj:
+                        blueObjs.append(blueObj)
             camera.stop_preview()
 
-            img = cv2.imdecode(data, 1)
-            hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+        meanRedObj = None
+        if redObjs:
+            meanRedObj = meanObjProps(redObjs)
 
-            greenMask = cv2.inRange(hsv, self.G_HSV_MIN, self.G_HSV_MAX)
-            greenObj = findObjProp(greenMask)
+        meanGreenObj = None
+        if greenObjs:
+            meanGreenObj = meanObjProps(greenObjs)
 
-            blueMask = cv2.inRange(hsv, self.B_HSV_MIN, self.B_HSV_MAX)
-            blueObj = findObjProp(blueMask)
+        meanBlueObj = None
+        if blueObjs:
+            meanBlueObj = meanObjProps(blueObjs)
 
-            redBMask = cv2.inRange(hsv, self.R_HSV_BMIN, self.R_HSV_BMAX)
-            redTMask = cv2.inRange(hsv, self.R_HSV_TMIN, self.R_HSV_TMAX)
-            redMask = cv2.bitwise_or(redBMask, redTMask)
-            redObj = findObjProp(redMask)
+        return (meanRedObj, meanGreenObj, meanBlueObj)
 
-            allMask = cv2.bitwise_or(cv2.bitwise_or(greenMask, blueMask), redMask)
-            result = cv2.bitwise_and(img, img, mask=allMask)
 
-            return (greenObj, blueObj, redObj)
+def meanObjProps(objs):
+    meanObj = {'area' : None, 'x' : None, 'y' : None}
+
+    for prop in ['area', 'x', 'y']:
+        val = 0
+        for i in range(len(objs)):
+            val += objs[i][prop]
+        val /= len(objs)
+        meanObj[prop] = val
+
+    return meanObj
 
 
 def findObjProp(colMask):
+    """
+    Find the properties of the object (biggest contour) from the colour mask.
+    """
     objA = 0
     objX = 0
     objY = 0
@@ -222,7 +257,7 @@ def findObjProp(colMask):
             objY = curY
 
     if objA > 0:
-        objProp = [objA, objX, objY]
+        objProp = {'area' : objA, 'x' : objX, 'y' : objY}
     else:
         objProp = None
     return objProp
