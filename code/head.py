@@ -4,7 +4,10 @@ import error
 from component import Component
 
 import math
+import time
+import io
 from adafruit_servokit import ServoKit
+from picamera.array import PiRGBArray
 from picamera import PiCamera
 import cv2
 import numpy as np
@@ -167,15 +170,13 @@ class Head(Component):
         return round(x, self.PRECISION), round(y, self.PRECISION)
 
 
-    def allObjCamPos(self):
+    def allObjCamProp(self):
         """
         Get the position of all blocks in camera view.
         """
 
         with PiCamera() as camera:
-            camera = PiCamera()
             camera.resolution = (self.IMG_WIDTH, self.IMG_HEIGHT)
-            camera.framerate = self.FRAMERATE
 
             stream = io.BytesIO()
             camera.start_preview()
@@ -188,45 +189,46 @@ class Head(Component):
             hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 
             yellowMask = cv2.inRange(hsv, self.Y_HSV_MIN, self.Y_HSV_MAX)
-            yellowObj = findImgObjProp(yellowMask)
+            yellowObj = findObjProp(yellowMask)
 
             blueMask = cv2.inRange(hsv, self.B_HSV_MIN, self.B_HSV_MAX)
-            blueObj = findImgObjProp(blueMask)
+            blueObj = findObjProp(blueMask)
 
             redBMask = cv2.inRange(hsv, self.R_HSV_BMIN, self.R_HSV_BMAX)
             redTMask = cv2.inRange(hsv, self.R_HSV_TMIN, self.R_HSV_TMAX)
             redMask = cv2.bitwise_or(redBMask, redTMask)
-            redObj = findImgObjProp(redMask)
+            redObj = findObjProp(redMask)
 
             allMask = cv2.bitwise_or(cv2.bitwise_or(yellowMask, blueMask), redMask)
             result = cv2.bitwise_and(img, img, mask=allMask)
 
             cv2.imshow("Image", img)
-            cv2.imshow("HSV", hsv)
             cv2.imshow("Result", result)
+
+            time.sleep(5)
+            cv2.destroyAllWindows()
 
             return (yellowObj, blueObj, redObj)
 
 
+def findObjProp(colMask):
+    objA = 0
+    objX = 0
+    objY = 0
 
-    def findImgObjProp(colMask):
-        objA = 0
-        objX = 0
-        objY = 0
+    contours, _ = cv2.findContours(colMask, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+    for contour in contours:
+        x, y, curW, curH = cv2.boundingRect(contour)
+        curA = curW * curH
+        curX = x + (curW // 2)
+        curY = y + (curH // 2)
+        if objA < curA:
+            objA = curA
+            objX = curX
+            objY = curY
 
-        contours, _ = cv2.findContours(colMask, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
-        for contour in contours:
-            x, y, curW, curH = cv2.boundingRect(contour)
-            curA = curW * curH
-            curX = x + (curW // 2)
-            curY = y + (curH // 2)
-            if objA < curA:
-                objA = curA
-                objX = curX
-                objY = curY
-
-        if objA > 0:
-            imgObjProp = [objA, objX, objY]
-        else:
-            imgObjProp = None
-        return imgObjProp
+    if objA > 0:
+        objProp = [objA, objX, objY]
+    else:
+        objProp = None
+    return objProp
