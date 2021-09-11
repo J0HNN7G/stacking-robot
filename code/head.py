@@ -85,6 +85,9 @@ class Head(Component):
     # Maximum red top hue HSV.
     R_HSV_TMAX = np.array([179,255,255])
 
+    # Object properties: pixel area, center horizontal pixel, center vertical pixel.
+    OBJ_PROPS = ['area', 'x', 'y']
+
 
     def __init__(self, viewPin, ultra):
         """
@@ -173,6 +176,9 @@ class Head(Component):
     def allObjCamProp(self, numOfChecks):
         """
         Get the properties of all blocks in camera view.
+
+        :param numOfChecks: number of times that the object properties
+                            are measured.
         """
         with PiCamera() as camera:
             camera.resolution = (self.IMG_WIDTH, self.IMG_HEIGHT)
@@ -224,22 +230,11 @@ class Head(Component):
         return (meanRedObj, meanGreenObj, meanBlueObj)
 
 
-def meanObjProps(objs):
-    meanObj = {'area' : None, 'x' : None, 'y' : None}
-
-    for prop in ['area', 'x', 'y']:
-        val = 0
-        for i in range(len(objs)):
-            val += objs[i][prop]
-        val /= len(objs)
-        meanObj[prop] = val
-
-    return meanObj
-
-
 def findObjProp(colMask):
     """
     Find the properties of the object (biggest contour) from the colour mask.
+
+    :param colMask: object colour mask
     """
     objA = 0
     objX = 0
@@ -257,7 +252,25 @@ def findObjProp(colMask):
             objY = curY
 
     if objA > 0:
-        objProp = {'area' : objA, 'x' : objX, 'y' : objY}
+        objProp = {self.OBJ_PROPS[0] : objA, self.OBJ_PROPS[1] : objX, self.OBJ_PROPS[2] : objY}
     else:
         objProp = None
     return objProp
+
+
+def meanObjProps(objs):
+    """
+    Get the mean properties from a list of object property measurements.
+
+    :param objs: list of object property measurements
+    """
+    meanObj = {self.OBJ_PROPS[0] : None, self.OBJ_PROPS[1] : None, self.OBJ_PROPS[2] : None}
+
+    for prop in self.OBJ_PROPS:
+        val = 0
+        for i in range(len(objs)):
+            val += objs[i][prop]
+        val /= len(objs)
+        meanObj[prop] = int(val)
+
+    return meanObj

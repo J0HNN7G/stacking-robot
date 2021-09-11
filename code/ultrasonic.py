@@ -23,6 +23,9 @@ class Ultrasonic(Component):
     # Error correction for ultrasonic sensor in metres.
     ERR_CORR = 0.016
 
+    # The max amount of seconds to wait for response in echoPin.
+    REP_LIM = 0.05
+
 
     def __init__(self, trigPin, echoPin):
         error.checkGPIO(trigPin)
@@ -69,14 +72,21 @@ class Ultrasonic(Component):
         time.sleep(self.EMIT_TIME)
         GPIO.output(self.trigPin, GPIO.LOW)
 
+        noRep = False
+        repStart = time.time()
         while not GPIO.input(self.echoPin):
-            pass
-        startTime = time.time()
-        while GPIO.input(self.echoPin):
-            pass
-        endTime = time.time()
+            if time.time() - repStart >= self.REP_LIM:
+                noRep = True
+                break
 
-        return (endTime - startTime) * self.SOUND_SPEED / 2
+        if noRep:
+            return None
+        else:
+            startTime = time.time()
+            while GPIO.input(self.echoPin):
+                pass
+            endTime = time.time()
+            return (endTime - startTime) * self.SOUND_SPEED / 2
 
 
     def meanAdjDist(self, numOfChecks):
@@ -90,6 +100,9 @@ class Ultrasonic(Component):
         :raise ValueError: if the ultrasonic sensor is off
         """
         data = []
-        for i in range(numOfChecks):
-            data.append(self.distance())
+        while len(data) < numOfChecks:
+            dist = self.distance()
+            if dist:
+                data.append(dist)
+
         return sum(data) / numOfChecks + self.ERR_CORR
