@@ -138,7 +138,7 @@ class Arm(Component):
         the value must be translated and stretched.
 
         :param angle: shoulder angle in degrees
-        :raise ValueError: if angle is not between 22 and 175, or the arm is off
+        :raise ValueError: if angle is not between 5 and 158, or the arm is off
         """
         error.checkComponent(self, 'Arm')
         error.checkInRange(angle, self.SHOULDER_MIN_DOM, self.SHOULDER_MAX_DOM)
@@ -152,7 +152,7 @@ class Arm(Component):
         the value must be translated and stretched.
 
         :param angle: elbow angle in degrees
-        :raise ValueError: if the angle is not between 5 and 125, or the arm is off
+        :raise ValueError: if the angle is not between 5 and 140, or the arm is off
         """
         error.checkComponent(self, 'Arm')
         error.checkInRange(angle, self.ELBOW_MIN_DOM, self.ELBOW_MAX_DOM)

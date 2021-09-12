@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import error
+from arm import Arm
+
+
 import time
 import math
 
@@ -81,8 +84,9 @@ class Control():
         Set the shoulder angle to be executed.
 
         :param angle: shoulder angle in degrees
-        :raise ValueError: if angle is not between 22 and 175
+        :raise ValueError: if angle is not between 5 and 158
         """
+        error.checkInRange(angle, Arm.SHOULDER_MIN_DOM, Arm.SHOULDER_MAX_DOM)
         self.shoulderAngle = angle
 
 
@@ -91,8 +95,9 @@ class Control():
         Set the elbow angle to be executed.
 
         :param angle: elbow angle in degrees
-        :raise ValueError: if the angle is not between 5 and 125
+        :raise ValueError: if the angle is not between 5 and 140
         """
+        error.checkInRange(angle, Arm.ELBOW_MIN_DOM, Arm.ELBOW_MAX_DOM)
         self.elbowAngle = angle
 
 
@@ -103,6 +108,7 @@ class Control():
         :param angle: wrist angle in degrees
         :raise ValueError: if angle is not between 0 and 180
         """
+        error.checkInRange(angle, Arm.MIN_ANGLE, Arm.MAX_ANGLE)
         self.wristAngle = angle
 
 
@@ -113,4 +119,5 @@ class Control():
         :param angle: grabber angle in degrees
         :raise ValueError: if angle is not between 0 and 90
         """
+        error.checkInRange(angle, Arm.MIN_ANGLE, Arm.GRABBER_DOM)
         self.grabberAngle = angle
