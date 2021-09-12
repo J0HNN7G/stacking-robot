@@ -252,7 +252,7 @@ def findObjProp(colMask):
             objY = curY
 
     if objA > 0:
-        objProp = {self.OBJ_PROPS[0] : objA, self.OBJ_PROPS[1] : objX, self.OBJ_PROPS[2] : objY}
+        objProp = {Head.OBJ_PROPS[0] : objA, Head.OBJ_PROPS[1] : objX, Head.OBJ_PROPS[2] : objY}
     else:
         objProp = None
     return objProp
@@ -264,9 +264,9 @@ def meanObjProps(objs):
 
     :param objs: list of object property measurements
     """
-    meanObj = {self.OBJ_PROPS[0] : None, self.OBJ_PROPS[1] : None, self.OBJ_PROPS[2] : None}
+    meanObj = {Head.OBJ_PROPS[0] : None, Head.OBJ_PROPS[1] : None, Head.OBJ_PROPS[2] : None}
 
-    for prop in self.OBJ_PROPS:
+    for prop in Head.OBJ_PROPS:
         val = 0
         for i in range(len(objs)):
             val += objs[i][prop]
