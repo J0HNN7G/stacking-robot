@@ -209,7 +209,7 @@ class Robot(Component):
                         searchStart = time.time()
                     self.body.move(self.MOVE_TIME, Direction.LEFT)
 
-                result = cv2.bitwise_and(image, image, mask=color_mask)
+                result = cv2.bitwise_and(image, image, mask=colMask)
                 cv2.imshow("Final Result", result)
 
                 rawCapture.truncate(0)
