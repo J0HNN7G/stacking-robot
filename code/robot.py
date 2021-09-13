@@ -145,17 +145,22 @@ class Robot(Component):
                 objProp = head.findObjProp(colMask)
 
                 if objProp:
+                    print(objProp)
                     if (objProp['area'] >= self.MIN_AREA) and (objProp['area'] < self.MAX_AREA):
+                        if not inView:
+                            print('found it')
                         inView = True
 
                         # Too high
                         if (objProp['y'] > self.CENTER_IMG_Y + (Head.IMG_HEIGHT // self.THRESH_DIV)) and (self.head.view != 0):
                             self.head.view = self.head.view - min(self.VIEW_DIFF, self.head.view)
+                            print('Lowering')
 
                         # Too low
                         elif objProp['y'] < self.CENTER_IMG_Y - (Head.IMG_HEIGHT // self.THRESH_DIV):
                             diff = min(self.VIEW_DIFF, Head.VIEW_RNG - self.head.view)
                             self.head.view = self.head.view + diff
+                            print('rising')
 
                             # If we get closer, the object will get out of view
                             if math.isclose(self.head.view, Head.VIEW_RNG, abs_tol=1):
@@ -165,21 +170,26 @@ class Robot(Component):
                         # Too left
                         if objProp['x'] > self.CENTER_IMG_X + (Head.IMG_WIDTH // self.THRESH_DIV):
                             self.body.move(self.MOVE_TIME, Direction.RIGHT)
+                            print('left')
 
                         # Too right
                         elif objProp['x'] < self.CENTER_IMG_X - (Head.IMG_WIDTH // self.THRESH_DIV):
                             self.body.move(self.MOVE_TIME, Direction.LEFT)
+                            print('right')
 
                         # Perfect horizontal view
                         else:
                             self.body.move(self.MOVE_TIME, Direction.FORWARD)
+                            print('forward')
 
 
                     elif objProp['area'] < self.MIN_AREA:
+                        print('searching')
                         if inView:
                             # start searching again
                             inView = False
                             searchStart = time.time()
+                            print('lost it')
                         elif (time.time() - searchStart > timeLim):
                             return False
 
@@ -194,5 +204,5 @@ class Robot(Component):
                         inView = False
                         searchStart = time.time()
                     self.body.move(self.MOVE_TIME, Direction.LEFT)
-                    
+
                 rawCapture.truncate(0)
