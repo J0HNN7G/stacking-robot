@@ -27,10 +27,10 @@ class Robot(Component):
     CLOSE_TIME = 1
 
     # Minimum area of object in image.
-    MIN_AREA = 250
+    MIN_AREA = 100
 
     # Maximum area of object in image.
-    MAX_AREA = 10 ** 4
+    MAX_AREA = 1.5 * (10 ** 4)
 
     # Horizontal center of camera images in pixels.
     CENTER_IMG_X = Head.IMG_WIDTH // 2
@@ -39,13 +39,16 @@ class Robot(Component):
     CENTER_IMG_Y = Head.IMG_HEIGHT // 2
 
     # The divisor of image width or height in pixels to determine if object is within center view
-    THRESH_DIV = 3
+    THRESH_DIV = 5
 
     # Duration of movement per camera frame in entity search.
     MOVE_TIME = 0.2
 
     # Angle change per camera frame if object is outside of vertical center view
     VIEW_DIFF = 5
+    
+    # Readjustment period for camera after search movement.
+    REF_TIME = 0.25
 
 
     def __init__(self, head, body, arm):
@@ -164,7 +167,6 @@ class Robot(Component):
 
                             # If we get closer, the object will get out of view
                             if math.isclose(self.head.view, Head.VIEW_RNG, abs_tol=1):
-                                cv2.destroyAllWindows()
                                 return True
 
 
@@ -192,24 +194,21 @@ class Robot(Component):
                             searchStart = time.time()
                             print('lost it')
                         elif (time.time() - searchStart > timeLim):
-                            cv2.destroyAllWindows()
                             return False
+                        self.body.move(self.MOVE_TIME, Direction.LEFT)
 
                     else:
-                        cv2.destroyAllWindows()
                         return True
 
                 else:
                     if (not inView) and (time.time() - searchStart > timeLim):
-                        cv2.destroyAllWindows()
                         return False
                     elif inView:
                         # start searching again
                         inView = False
                         searchStart = time.time()
                     self.body.move(self.MOVE_TIME, Direction.LEFT)
-
-                result = cv2.bitwise_and(image, image, mask=colMask)
-                cv2.imshow("Final Result", result)
-
+                
+                # readjust the camera
+                time.sleep(self.REF_TIME)
                 rawCapture.truncate(0)
