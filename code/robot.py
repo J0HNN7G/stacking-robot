@@ -100,25 +100,25 @@ class Robot(Component):
 
             if (Arm.SHOULDER_MIN_DOM <= shoulderAngle <= Arm.SHOULDER_MAX_DOM) and (Arm.ELBOW_MIN_DOM <= elbowAngle <= Arm.ELBOW_MAX_DOM):
                 # open
-                self.arm.control.grabber(Arm.MIN_ANGLE)
-                self.arm.control.execute()
+                self.arm.planGrabber(Arm.MIN_ANGLE)
+                self.arm.executePlan()
                 time.sleep(self.OPEN_TIME)
 
                 # position
-                self.arm.control.shoulder(shoulderAngle)
-                self.arm.control.elbow(elbowAngle)
-                self.arm.control.execute()
+                self.arm.planShoulder(shoulderAngle)
+                self.arm.planElbow(elbowAngle)
+                self.arm.executePlan()
                 time.sleep(self.CLOSE_TIME)
 
                 # close
-                self.arm.control.grabber(Arm.GRABBER_DOM)
-                self.arm.control.execute()
+                self.arm.planGrabber(Arm.GRABBER_DOM)
+                self.arm.executePlan()
                 time.sleep(self.CLOSE_TIME)
 
                 # position
-                self.arm.control.shoulder(Arm.SHOULDER_MAX_DOM)
-                self.arm.control.elbow(ARM.ELBOW_MAX_DOM)
-                self.arm.control.execute()
+                self.arm.planShoulder(Arm.SHOULDER_MAX_DOM)
+                self.arm.planElbow(ARM.ELBOW_MAX_DOM)
+                self.arm.executePlan()
 
                 result = True
         return result

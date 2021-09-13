@@ -2,8 +2,8 @@
 
 import error
 from component import Component
-from control import Control
 
+import math
 from adafruit_servokit import ServoKit
 
 class Arm(Component):
@@ -43,6 +43,15 @@ class Arm(Component):
     # Angle input domain of the grabber.
     GRABBER_DOM = 90
 
+    # Angle to increment each component by per loop in degrees.
+    ANGLE_INC = 5
+
+    # Absolute tolerance for difference between desired angle and actual angle of components.
+    ABS_TOL = 1
+
+    # Time between each angle increment.
+    SLEEPY_TIME = 0.01
+
 
     def __init__(self, shoulderPin, elbowPin, wristPin, grabberPin):
         """
@@ -65,7 +74,11 @@ class Arm(Component):
         self._elbow = kit.servo[elbowPin]
         self._wrist = kit.servo[wristPin]
         self._grabber = kit.servo[grabberPin]
-        self.control = Control(self)
+
+        self.planShoulder = None
+        self.planElbow = None
+        self.planWrist = None
+        self.planGrabber = None
 
 
     def setup(self):
@@ -88,6 +101,95 @@ class Arm(Component):
         self._wrist.angle = None
         self._grabber.angle = None
         self.status = False
+
+
+    def executePlan(self):
+        """
+        Execute planned angles on arm.
+
+        :raise ValueError: if the arm is off
+        """
+        error.checkComponent(self, 'Arm')
+
+        while not((self.planShoulder is None) and (self.planElbow is None) and (self.planWrist is None) and (self.planGrabber is None)):
+
+            if self.planShoulder is not None:
+                angleDiff = self.planShoulder - self.shoulder
+                change = min(abs(angleDiff), self.ANGLE_INC)*math.copysign(1, angleDiff)
+                self.shoulder = self.shoulder + change
+
+                if math.isclose(self.shoulder, self.planShoulder, abs_tol=self.ABS_TOL):
+                    self.planShoulder = None
+
+            if self.planElbow is not None:
+                angleDiff = self.planElbow - self.elbow
+                change = min(abs(angleDiff), self.ANGLE_INC)*math.copysign(1, angleDiff)
+                self.elbow = self.elbow + change
+
+                if math.isclose(self.elbow, self.planElbow, abs_tol=self.ABS_TOL):
+                    self.planElbow = None
+
+            if self.planWrist is not None:
+                angleDiff = self.planWrist - self.wrist
+                change = min(abs(angleDiff), self.ANGLE_INC)*math.copysign(1, angleDiff)
+                self.wrist = self.wrist + change
+
+                if math.isclose(self.wrist, self.planWrist, abs_tol=self.ABS_TOL):
+                    self.planWrist = None
+
+            if self.planGrabber is not None:
+                angleDiff = self.planGrabber - self.grabber
+                change = min(abs(angleDiff), self.ANGLE_INC)*math.copysign(1, angleDiff)
+                self.grabber = self.grabber + change
+
+                if math.isclose(self.grabber, self.planGrabber, abs_tol=self.ABS_TOL):
+                    self.planGrabber = None
+
+            time.sleep(self.SLEEPY_TIME)
+
+
+    def planShoulder(self, angle):
+        """
+        Set the shoulder angle to be executed.
+
+        :param angle: shoulder angle in degrees
+        :raise ValueError: if angle is not between 5 and 158
+        """
+        error.checkInRange(angle, self.SHOULDER_MIN_DOM, self.SHOULDER_MAX_DOM)
+        self.planShoulder = angle
+
+
+    def planElbow(self, angle):
+        """
+        Set the elbow angle to be executed.
+
+        :param angle: elbow angle in degrees
+        :raise ValueError: if the angle is not between 5 and 140
+        """
+        error.checkInRange(angle, Arm.ELBOW_MIN_DOM, self.ELBOW_MAX_DOM)
+        self.planElbow = angle
+
+
+    def planWrist(self, angle):
+        """
+        Set the wrist angle to be executed.
+
+        :param angle: wrist angle in degrees
+        :raise ValueError: if angle is not between 0 and 180
+        """
+        error.checkInRange(angle, self.MIN_ANGLE, self.MAX_ANGLE)
+        self.planWrist = angle
+
+
+    def planGrabber(self, angle):
+        """
+        Set the grabber angle to be executed.
+
+        :param angle: grabber angle in degrees
+        :raise ValueError: if angle is not between 0 and 90
+        """
+        error.checkInRange(angle, self.MIN_ANGLE, self.GRABBER_DOM)
+        self.planGrabber = angle
 
 
     @property
