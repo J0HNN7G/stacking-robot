@@ -5,6 +5,7 @@ from component import Component
 from inverse_kinematics import calcAngles
 from arm import Arm
 from head import Head
+import head
 from entity import Entity
 from direction import Direction
 
@@ -41,7 +42,7 @@ class Robot(Component):
     THRESH_DIV = 3
 
     # Duration of movement per camera frame in entity search.
-    MOVE_TIME = 0.3
+    MOVE_TIME = 0.2
 
     # Angle change per camera frame if object is outside of vertical center view
     VIEW_DIFF = 5
@@ -140,19 +141,19 @@ class Robot(Component):
             for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
                 image = frame.array
                 hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
-                colMask = Head.colourMask(hsv, entity)
-                objProp = findObjProp(colMask)
+                colMask = head.colourMask(hsv, entity)
+                objProp = head.findObjProp(colMask)
 
                 if objProp:
                     if (objProp['area'] >= self.MIN_AREA) and (objProp['area'] < self.MAX_AREA):
                         inView = True
 
                         # Too high
-                        if (objProp['y'] > self.CENTER_Y + (Head.IMG_HEIGHT // self.THRESH_DIV)) and (self.head.view != 0):
+                        if (objProp['y'] > self.CENTER_IMG_Y + (Head.IMG_HEIGHT // self.THRESH_DIV)) and (self.head.view != 0):
                             self.head.view = self.head.view - min(self.VIEW_DIFF, self.head.view)
 
                         # Too low
-                        elif objProp['y'] < self.CENTER_Y - (Head.IMG_HEIGHT // self.THRESH_DIV):
+                        elif objProp['y'] < self.CENTER_IMG_Y - (Head.IMG_HEIGHT // self.THRESH_DIV):
                             diff = min(self.VIEW_DIFF, Head.VIEW_RNG - self.head.view)
                             self.head.view = self.head.view + diff
 
@@ -162,16 +163,16 @@ class Robot(Component):
 
 
                         # Too left
-                        if objProp['x'] > self.CENTER_X + (Head.IMG_WIDTH // self.THRESH_DIV):
-                            robot.body.move(self.MOVE_TIME, Direction.RIGHT)
+                        if objProp['x'] > self.CENTER_IMG_X + (Head.IMG_WIDTH // self.THRESH_DIV):
+                            self.body.move(self.MOVE_TIME, Direction.RIGHT)
 
                         # Too right
-                        elif objProp['x'] < self.CENTER_X - (Head.IMG_WIDTH // self.THRESH_DIV):
-                            robot.body.move(self.MOVE_TIME, Direction.LEFT)
+                        elif objProp['x'] < self.CENTER_IMG_X - (Head.IMG_WIDTH // self.THRESH_DIV):
+                            self.body.move(self.MOVE_TIME, Direction.LEFT)
 
                         # Perfect horizontal view
                         else:
-                            robot.body.move(self.MOVE_TIME, Direction.FORWARD)
+                            self.body.move(self.MOVE_TIME, Direction.FORWARD)
 
 
                     elif objProp['area'] < self.MIN_AREA:
@@ -193,12 +194,5 @@ class Robot(Component):
                         inView = False
                         searchStart = time.time()
                     self.body.move(self.MOVE_TIME, Direction.LEFT)
-
-
-
-
-
-        # Initial rotation search
-
-
-        # Move towards object (if lost - rotate)
+                    
+                rawCapture.truncate(0)
