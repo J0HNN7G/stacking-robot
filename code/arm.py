@@ -9,6 +9,7 @@ from adafruit_servokit import ServoKit
 class Arm(Component):
     """A class for controlling the arm of the robot."""
 
+
     # The minimum angle in the input domain for any angle.
     MIN_ANGLE = 0
 

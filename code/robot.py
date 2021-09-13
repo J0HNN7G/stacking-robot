@@ -4,8 +4,16 @@ import error
 from component import Component
 from inverse_kinematics import calcAngles
 from arm import Arm
+from head import Head
+from entity import Entity
+from direction import Direction
 
+import math
 import time
+from picamera.array import PiRGBArray
+from picamera import PiCamera
+import cv2
+import numpy as np
 
 class Robot(Component):
     """A class for controlling the robot."""
@@ -16,6 +24,27 @@ class Robot(Component):
 
     # Time for grabber to grab
     CLOSE_TIME = 1
+
+    # Minimum area of object in image.
+    MIN_AREA = 250
+
+    # Maximum area of object in image.
+    MAX_AREA = 10 ** 5
+
+    # Horizontal center of camera images in pixels.
+    CENTER_IMG_X = Head.IMG_WIDTH // 2
+
+    # Vertical center of camera images in pixels.
+    CENTER_IMG_Y = Head.IMG_HEIGHT // 2
+
+    # The divisor of image width or height in pixels to determine if object is within center view
+    THRESH_DIV = 3
+
+    # Duration of movement per camera frame in entity search.
+    MOVE_TIME = 0.3
+
+    # Angle change per camera frame if object is outside of vertical center view
+    VIEW_DIFF = 5
 
 
     def __init__(self, head, body, arm):
@@ -70,22 +99,106 @@ class Robot(Component):
             shoulderAngle, elbowAngle = angles
 
             if (Arm.SHOULDER_MIN_DOM <= shoulderAngle <= Arm.SHOULDER_MAX_DOM) and (Arm.ELBOW_MIN_DOM <= elbowAngle <= Arm.ELBOW_MAX_DOM):
-                self.arm.control.grabber(0)
+                # open
+                self.arm.control.grabber(Arm.MIN_ANGLE)
                 self.arm.control.execute()
                 time.sleep(self.OPEN_TIME)
 
+                # position
                 self.arm.control.shoulder(shoulderAngle)
                 self.arm.control.elbow(elbowAngle)
                 self.arm.control.execute()
                 time.sleep(self.CLOSE_TIME)
 
-                self.arm.control.grabber(90)
+                # close
+                self.arm.control.grabber(Arm.GRABBER_DOM)
                 self.arm.control.execute()
                 time.sleep(self.CLOSE_TIME)
 
-                self.arm.control.shoulder(90)
-                self.arm.control.elbow(90)
+                # position
+                self.arm.control.shoulder(Arm.SHOULDER_MAX_DOM)
+                self.arm.control.elbow(ARM.ELBOW_MAX_DOM)
                 self.arm.control.execute()
 
                 result = True
         return result
+
+
+    def find(self, entity, timeLim):
+        error.checkType(entity, Entity, 'entity', 'Entity')
+        if entity == Entity.FLOOR:
+            return True
+
+        with PiCamera() as camera:
+            camera.resolution = (Head.IMG_WIDTH, Head.IMG_HEIGHT)
+            camera.framerate = Head.FRAMERATE
+            rawCapture = PiRGBArray(camera, size=(Head.IMG_WIDTH, Head.IMG_HEIGHT))
+
+            inView = False
+            searchStart = time.time()
+
+            for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
+                image = frame.array
+                hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+                colMask = Head.colourMask(hsv, entity)
+                objProp = findObjProp(colMask)
+
+                if objProp:
+                    if (objProp['area'] >= self.MIN_AREA) and (objProp['area'] < self.MAX_AREA):
+                        inView = True
+
+                        # Too high
+                        if (objProp['y'] > self.CENTER_Y + (Head.IMG_HEIGHT // self.THRESH_DIV)) and (self.head.view != 0):
+                            self.head.view = self.head.view - min(self.VIEW_DIFF, self.head.view)
+
+                        # Too low
+                        elif objProp['y'] < self.CENTER_Y - (Head.IMG_HEIGHT // self.THRESH_DIV):
+                            diff = min(self.VIEW_DIFF, Head.VIEW_RNG - self.head.view)
+                            self.head.view = self.head.view + diff
+
+                            # If we get closer, the object will get out of view
+                            if math.isclose(self.head.view, Head.VIEW_RNG, abs_tol=1):
+                                return True
+
+
+                        # Too left
+                        if objProp['x'] > self.CENTER_X + (Head.IMG_WIDTH // self.THRESH_DIV):
+                            robot.body.move(self.MOVE_TIME, Direction.RIGHT)
+
+                        # Too right
+                        elif objProp['x'] < self.CENTER_X - (Head.IMG_WIDTH // self.THRESH_DIV):
+                            robot.body.move(self.MOVE_TIME, Direction.LEFT)
+
+                        # Perfect horizontal view
+                        else:
+                            robot.body.move(self.MOVE_TIME, Direction.FORWARD)
+
+
+                    elif objProp['area'] < self.MIN_AREA:
+                        if inView:
+                            # start searching again
+                            inView = False
+                            searchStart = time.time()
+                        elif (time.time() - searchStart > timeLim):
+                            return False
+
+                    else:
+                        return True
+
+                else:
+                    if (not inView) and (time.time() - searchStart > timeLim):
+                        return False
+                    elif inView:
+                        # start searching again
+                        inView = False
+                        searchStart = time.time()
+                    self.body.move(self.MOVE_TIME, Direction.LEFT)
+
+
+
+
+
+        # Initial rotation search
+
+
+        # Move towards object (if lost - rotate)

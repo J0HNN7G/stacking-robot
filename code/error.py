@@ -31,7 +31,7 @@ def checkType(val, classy, valName, className):
     :raise TypeError: if given value is not a class instance
     """
     if not isinstance(val, classy):
-        raise TypeError(f'Given {valName} is a {className} instance')
+        raise TypeError(f'Given {valName} is not a {className} instance')
 
 
 def checkPositive(val):

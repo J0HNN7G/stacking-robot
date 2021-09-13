@@ -2,12 +2,12 @@
 
 import error
 from component import Component
+from entity import Entity
 
 import math
 import time
 import io
 from adafruit_servokit import ServoKit
-from picamera.array import PiRGBArray
 from picamera import PiCamera
 import cv2
 import numpy as np
@@ -45,18 +45,6 @@ class Head(Component):
 
     # Camera resolution height in pixels.
     IMG_HEIGHT = 480
-
-    # Horizontal center of camera images in pixels.
-    CENTER_IMG_X = IMG_WIDTH // 2
-
-    # Vertical center of camera images in pixels.
-    CENTER_IMG_Y = IMG_HEIGHT // 2
-
-    # Minimum area of object in image.
-    MIN_AREA = 250
-
-    # Maximum area of object in image.
-    MAX_AREA = 10 ** 5
 
     # Camera framerate.
     FRAMERATE = 32
@@ -197,19 +185,17 @@ class Head(Component):
                     img = cv2.imdecode(data, 1)
                     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 
-                    redBMask = cv2.inRange(hsv, self.R_HSV_BMIN, self.R_HSV_BMAX)
-                    redTMask = cv2.inRange(hsv, self.R_HSV_TMIN, self.R_HSV_TMAX)
-                    redMask = cv2.bitwise_or(redBMask, redTMask)
+                    redMask = colourMask(hsv, Entity.RED)
                     redObj = findObjProp(redMask)
                     if redObj:
                         redObjs.append(redObj)
 
-                    greenMask = cv2.inRange(hsv, self.G_HSV_MIN, self.G_HSV_MAX)
+                    greenMask = colourMask(hsv, Entity.GREEN)
                     greenObj = findObjProp(greenMask)
                     if greenObj:
                         greenObjs.append(greenObj)
 
-                    blueMask = cv2.inRange(hsv, self.B_HSV_MIN, self.B_HSV_MAX)
+                    blueMask = colourMask(hsv, Entity.BLUE)
                     blueObj = findObjProp(blueMask)
                     if blueObj:
                         blueObjs.append(blueObj)
@@ -274,3 +260,19 @@ def meanObjProps(objs):
         meanObj[prop] = int(val)
 
     return meanObj
+
+
+def colourMask(hsv, colour):
+    """
+    TODO
+    """
+    if colour == Entity.RED:
+        redBMask = cv2.inRange(hsv, Head.R_HSV_BMIN, Head.R_HSV_BMAX)
+        redTMask = cv2.inRange(hsv, Head.R_HSV_TMIN, Head.R_HSV_TMAX)
+        colMask = cv2.bitwise_or(redBMask, redTMask)
+    elif colour == Entity.GREEN:
+        colMask = cv2.inRange(hsv, Head.G_HSV_MIN, Head.G_HSV_MAX)
+    else:
+        colMask = cv2.inRange(hsv, Head.B_HSV_MIN, Head.B_HSV_MAX)
+
+    return colMask
