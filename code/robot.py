@@ -30,7 +30,7 @@ class Robot(Component):
     MIN_AREA = 250
 
     # Maximum area of object in image.
-    MAX_AREA = 10 ** 5
+    MAX_AREA = 10 ** 4
 
     # Horizontal center of camera images in pixels.
     CENTER_IMG_X = Head.IMG_WIDTH // 2
@@ -164,6 +164,7 @@ class Robot(Component):
 
                             # If we get closer, the object will get out of view
                             if math.isclose(self.head.view, Head.VIEW_RNG, abs_tol=1):
+                                cv2.destroyAllWindows()
                                 return True
 
 
@@ -191,18 +192,24 @@ class Robot(Component):
                             searchStart = time.time()
                             print('lost it')
                         elif (time.time() - searchStart > timeLim):
+                            cv2.destroyAllWindows()
                             return False
 
                     else:
+                        cv2.destroyAllWindows()
                         return True
 
                 else:
                     if (not inView) and (time.time() - searchStart > timeLim):
+                        cv2.destroyAllWindows()
                         return False
                     elif inView:
                         # start searching again
                         inView = False
                         searchStart = time.time()
                     self.body.move(self.MOVE_TIME, Direction.LEFT)
+
+                result = cv2.bitwise_and(image, image, mask=color_mask)
+                cv2.imshow("Final Result", result)
 
                 rawCapture.truncate(0)
