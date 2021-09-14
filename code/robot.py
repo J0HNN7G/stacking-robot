@@ -30,7 +30,7 @@ class Robot(Component):
     MIN_AREA = 100
 
     # Maximum area of object in image.
-    MAX_AREA = 10 ** 4
+    MAX_AREA = 1.5 * (10 ** 4)
 
     # Horizontal center of camera images in pixels.
     CENTER_IMG_X = Head.IMG_WIDTH // 2
@@ -64,7 +64,7 @@ class Robot(Component):
     CLOSE_VIEW_DIFF = 3
 
     # Readjustment period for camera after search movement for faraway search.
-    CLOSE_REF_TIME = 0.5
+    CLOSE_REF_TIME = 0.7
 
     # Minimum number of tries for search pickup.
     MIN_NUM_TRIES = 3
