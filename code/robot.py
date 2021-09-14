@@ -144,11 +144,7 @@ class Robot(Component):
         return True
 
 
-
-
-
-
-    def pickup(self, entity, timeLim = 10):
+    def pickup(self, entity):
         """
         Pick up an object close to the front of the robot.
 
@@ -159,7 +155,7 @@ class Robot(Component):
 
         objPos = self.head.objPos()
         angles = ik.calcAngles(objPos)
-        if not angles:
+        if angles:
             shoulderAngle, elbowAngle = angles
 
             if (Arm.SHOULDER_MIN_DOM <= shoulderAngle <= Arm.SHOULDER_MAX_DOM) and (Arm.ELBOW_MIN_DOM <= elbowAngle <= Arm.ELBOW_MAX_DOM):
@@ -291,14 +287,17 @@ class Robot(Component):
             camera.framerate = Head.FRAMERATE
             rawCapture = PiRGBArray(camera, size=(Head.IMG_WIDTH, Head.IMG_HEIGHT))
 
+            searchLeft = True
+            searchStart = time.time()
+
             for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
+                if time.time() - searchStart > timeLim:
+                    return False
+
                 image = frame.array
                 hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
                 colMask = head.colourMask(hsv, entity)
                 objProp = head.findObjProp(colMask)
-
-                searchLeft = True
-                searchStart = time.time()
 
                 if objProp:
                     print(objProp)
@@ -347,9 +346,6 @@ class Robot(Component):
 
                 else:
                     print('searching')
-                    if time.time() - searchStart > timeLim:
-                        return False
-
                     self.body.move(self.CLOSE_MOVE_TIME, Direction.BACKWARD)
                     if searchLeft:
                         self.body.move(self.CLOSE_MOVE_TIME, Direction.LEFT)
