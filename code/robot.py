@@ -54,7 +54,7 @@ class Robot(Component):
 
     # The divisor of image width or height in pixels to determine
     # if object is within center view for faraway find.
-    CLOSE_THRESH_DIV = 7
+    CLOSE_THRESH_DIV = 6
 
     # Duration of movement per camera frame in faraway entity search.
     CLOSE_MOVE_TIME = 0.05
@@ -351,7 +351,7 @@ class Robot(Component):
                         self.body.move(self.CLOSE_MOVE_TIME, Direction.LEFT)
                         searchLeft = False
                     else:
-                        self.body.move(self.FAR_MOVE_TIME, Direction.RIGHT)
+                        self.body.move(self.CLOSE_MOVE_TIME, Direction.RIGHT)
                         searchLeft = True
 
                 # readjust the camera
