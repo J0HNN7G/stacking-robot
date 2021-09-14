@@ -50,7 +50,7 @@ class Robot(Component):
     FAR_VIEW_DIFF = 5
 
     # Readjustment period for camera after search movement for faraway search.
-    FAR_REF_TIME = 0.25
+    FAR_REF_TIME = 0.4
 
     # The divisor of image width or height in pixels to determine
     # if object is within center view for faraway find.
