@@ -30,7 +30,7 @@ class Robot(Component):
     MIN_AREA = 100
 
     # Maximum area of object in image.
-    MAX_AREA = 1.5 * (10 ** 4)
+    MAX_AREA = 10 ** 4
 
     # Horizontal center of camera images in pixels.
     CENTER_IMG_X = Head.IMG_WIDTH // 2
