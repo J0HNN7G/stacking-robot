@@ -3,6 +3,7 @@
 import error
 from component import Component
 
+import time
 import math
 from adafruit_servokit import ServoKit
 
@@ -75,10 +76,10 @@ class Arm(Component):
         self._wrist = kit.servo[wristPin]
         self._grabber = kit.servo[grabberPin]
 
-        self.planShoulder = None
-        self.planElbow = None
-        self.planWrist = None
-        self.planGrabber = None
+        self.pShoulder = None
+        self.pElbow = None
+        self.pWrist = None
+        self.pGrabber = None
 
 
     def setup(self):
@@ -111,39 +112,39 @@ class Arm(Component):
         """
         error.checkComponent(self, 'Arm')
 
-        while not((self.planShoulder is None) and (self.planElbow is None) and (self.planWrist is None) and (self.planGrabber is None)):
+        while not((self.pShoulder is None) and (self.pElbow is None) and (self.pWrist is None) and (self.pGrabber is None)):
 
-            if self.planShoulder is not None:
-                angleDiff = self.planShoulder - self.shoulder
+            if self.pShoulder is not None:
+                angleDiff = self.pShoulder - self.shoulder
                 change = min(abs(angleDiff), self.ANGLE_INC)*math.copysign(1, angleDiff)
                 self.shoulder = self.shoulder + change
 
-                if math.isclose(self.shoulder, self.planShoulder, abs_tol=self.ABS_TOL):
-                    self.planShoulder = None
+                if math.isclose(self.shoulder, self.pShoulder, abs_tol=self.ABS_TOL):
+                    self.pShoulder = None
 
-            if self.planElbow is not None:
-                angleDiff = self.planElbow - self.elbow
+            if self.pElbow is not None:
+                angleDiff = self.pElbow - self.elbow
                 change = min(abs(angleDiff), self.ANGLE_INC)*math.copysign(1, angleDiff)
                 self.elbow = self.elbow + change
 
-                if math.isclose(self.elbow, self.planElbow, abs_tol=self.ABS_TOL):
-                    self.planElbow = None
+                if math.isclose(self.elbow, self.pElbow, abs_tol=self.ABS_TOL):
+                    self.pElbow = None
 
-            if self.planWrist is not None:
-                angleDiff = self.planWrist - self.wrist
+            if self.pWrist is not None:
+                angleDiff = self.pWrist - self.wrist
                 change = min(abs(angleDiff), self.ANGLE_INC)*math.copysign(1, angleDiff)
                 self.wrist = self.wrist + change
 
-                if math.isclose(self.wrist, self.planWrist, abs_tol=self.ABS_TOL):
-                    self.planWrist = None
+                if math.isclose(self.wrist, self.pWrist, abs_tol=self.ABS_TOL):
+                    self.pWrist = None
 
-            if self.planGrabber is not None:
-                angleDiff = self.planGrabber - self.grabber
+            if self.pGrabber is not None:
+                angleDiff = self.pGrabber - self.grabber
                 change = min(abs(angleDiff), self.ANGLE_INC)*math.copysign(1, angleDiff)
                 self.grabber = self.grabber + change
 
-                if math.isclose(self.grabber, self.planGrabber, abs_tol=self.ABS_TOL):
-                    self.planGrabber = None
+                if math.isclose(self.grabber, self.pGrabber, abs_tol=self.ABS_TOL):
+                    self.pGrabber = None
 
             time.sleep(self.SLEEPY_TIME)
 
@@ -156,7 +157,7 @@ class Arm(Component):
         :raise ValueError: if angle is not between 5 and 158
         """
         error.checkInRange(angle, self.SHOULDER_MIN_DOM, self.SHOULDER_MAX_DOM)
-        self.planShoulder = angle
+        self.pShoulder = angle
 
 
     def planElbow(self, angle):
@@ -167,7 +168,7 @@ class Arm(Component):
         :raise ValueError: if the angle is not between 5 and 140
         """
         error.checkInRange(angle, Arm.ELBOW_MIN_DOM, self.ELBOW_MAX_DOM)
-        self.planElbow = angle
+        self.pElbow = angle
 
 
     def planWrist(self, angle):
@@ -178,7 +179,7 @@ class Arm(Component):
         :raise ValueError: if angle is not between 0 and 180
         """
         error.checkInRange(angle, self.MIN_ANGLE, self.MAX_ANGLE)
-        self.planWrist = angle
+        self.pWrist = angle
 
 
     def planGrabber(self, angle):
@@ -189,7 +190,7 @@ class Arm(Component):
         :raise ValueError: if angle is not between 0 and 90
         """
         error.checkInRange(angle, self.MIN_ANGLE, self.GRABBER_DOM)
-        self.planGrabber = angle
+        self.pGrabber = angle
 
 
     @property

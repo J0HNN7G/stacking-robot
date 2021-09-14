@@ -136,8 +136,11 @@ class Robot(Component):
                 time.sleep(self.CLOSE_TIME)
 
                 # position
-                self.arm.planShoulder(Arm.SHOULDER_MAX_DOM)
-                self.arm.planElbow(ARM.ELBOW_MAX_DOM)
+                self.arm.planShoulder(Arm.SHOULDER_MIN_DOM)
+                self.arm.planElbow(90)
+                self.arm.executePlan()
+                
+                self.arm.planElbow(Arm.ELBOW_MAX_DOM)
                 self.arm.executePlan()
 
                 result = True
@@ -219,6 +222,7 @@ class Robot(Component):
                         return True
 
                 else:
+                    print('searching')
                     if (not inView) and (time.time() - searchStart > timeLim):
                         return False
                     elif inView:
@@ -232,7 +236,7 @@ class Robot(Component):
                 rawCapture.truncate(0)
 
 
-    def closeFind(self, entity, timeLim):
+    def closeFind(self, entity):
         error.checkType(entity, Entity, 'entity', 'Entity')
         if entity == Entity.FLOOR:
             return True
@@ -279,7 +283,7 @@ class Robot(Component):
                     else:
                         objPos = self.head.objPos()
                         # distance between shoulder axis and target
-                        tDist = round( math.sqrt(objPos[0]**2 + objPos[1]**2), PRECISION)
+                        tDist = round( math.sqrt(objPos[0]**2 + objPos[1]**2), ik.PRECISION)
 
                         if tDist > ik.S_LEN + ik.E_LEN:
                             self.body.move(self.CLOSE_MOVE_TIME, Direction.FORWARD)
