@@ -66,6 +66,9 @@ class Robot(Component):
     # Readjustment period for camera after search movement for faraway search.
     CLOSE_REF_TIME = 0.5
 
+    # Minimum number of tries for search pickup.
+    MIN_NUM_TRIES = 3
+
 
     def __init__(self, head, body, arm):
         """
@@ -103,19 +106,60 @@ class Robot(Component):
         self.status = False
 
 
-    def pickup(self):
+    def searchPickup(self, entity, numTries = 5):
+        """
+        Pickup an object far away from the robot and/or behind it.
+
+        :param entity: the entity to be picked up
+        :param numTries: the total number of tries for all action parts
+        """
+        error.checkComponent(self, 'Robot')
+        error.checkType(entity, Entity, 'entity', 'Entity')
+        error.checkInRange(numTries, self.MIN_NUM_TRIES, math.inf)
+
+        farFound = self.farFind(entity)
+        tryCount = 1
+        while not farFound:
+            farFound = self.farFind(entity)
+            tryCount += 1
+            if tryCount == numTries:
+                return False
+
+        tryCount += 1
+        closeFound = self.closeFind(entity)
+        while not closeFound:
+            closeFound = self.closeFind(entity)
+            tryCount += 1
+            if tryCount == numTries:
+                return False
+
+        tryCount += 1
+        pickupDone = self.pickup(entity)
+        while not pickupDone:
+            pickupDone = self.pickup(entity)
+            tryCount += 1
+            if tryCount == numTries:
+                return False
+
+        return True
+
+
+
+
+
+
+    def pickup(self, entity, timeLim = 10):
         """
         Pick up an object close to the front of the robot.
 
-        :return: True if the pick up was possible, otherwise False
+        :return: True if the pick up succeeded in time, otherwise False
         """
         error.checkComponent(self, 'Robot')
+        error.checkType(entity, Entity, 'entity', 'Entity')
 
-        result = False
         objPos = self.head.objPos()
         angles = ik.calcAngles(objPos)
-
-        if angles is not None:
+        if not angles:
             shoulderAngle, elbowAngle = angles
 
             if (Arm.SHOULDER_MIN_DOM <= shoulderAngle <= Arm.SHOULDER_MAX_DOM) and (Arm.ELBOW_MIN_DOM <= elbowAngle <= Arm.ELBOW_MAX_DOM):
@@ -139,18 +183,18 @@ class Robot(Component):
                 self.arm.planShoulder(Arm.SHOULDER_MIN_DOM)
                 self.arm.planElbow(90)
                 self.arm.executePlan()
-                
+
                 self.arm.planElbow(Arm.ELBOW_MAX_DOM)
                 self.arm.executePlan()
 
-                result = True
-        return result
+                if not self.head.objCamProp(entity):
+                    return True
+        return False
 
 
-    def farFind(self, entity, timeLim):
+    def farFind(self, entity, timeLim=10):
+        error.checkComponent(self, 'Robot')
         error.checkType(entity, Entity, 'entity', 'Entity')
-        if entity == Entity.FLOOR:
-            return True
 
         self.head.view = 0
 
@@ -172,7 +216,7 @@ class Robot(Component):
                     print(objProp)
                     if (objProp['area'] >= self.MIN_AREA) and (objProp['area'] < self.MAX_AREA):
                         if not inView:
-                            print('found it')
+                            print('found')
                         inView = True
 
                         # Too high
@@ -188,6 +232,7 @@ class Robot(Component):
 
                             # If we get closer, the object will get out of view
                             if math.isclose(self.head.view, Head.VIEW_RNG, abs_tol=1):
+                                print('Done')
                                 return True
 
 
@@ -213,12 +258,13 @@ class Robot(Component):
                             # start searching again
                             inView = False
                             searchStart = time.time()
-                            print('lost it')
+                            print('lost')
                         elif (time.time() - searchStart > timeLim):
                             return False
                         self.body.move(self.FAR_MOVE_TIME, Direction.LEFT)
 
                     else:
+                        print('Done')
                         return True
 
                 else:
@@ -236,10 +282,9 @@ class Robot(Component):
                 rawCapture.truncate(0)
 
 
-    def closeFind(self, entity):
+    def closeFind(self, entity, timeLim = 10):
+        error.checkComponent(self, 'Robot')
         error.checkType(entity, Entity, 'entity', 'Entity')
-        if entity == Entity.FLOOR:
-            return True
 
         with PiCamera() as camera:
             camera.resolution = (Head.IMG_WIDTH, Head.IMG_HEIGHT)
@@ -252,12 +297,11 @@ class Robot(Component):
                 colMask = head.colourMask(hsv, entity)
                 objProp = head.findObjProp(colMask)
 
+                searchLeft = True
+                searchStart = time.time()
+
                 if objProp:
                     print(objProp)
-                    if objProp['area'] < self.MIN_AREA:
-                        print('way too small')
-                        return False
-
 
                         # Too high
                     if (objProp['y'] > self.CENTER_IMG_Y + (Head.IMG_HEIGHT // self.CLOSE_THRESH_DIV)) and (self.head.view != 0):
@@ -270,6 +314,7 @@ class Robot(Component):
                         print('up')
                         # If we get closer, the object will get out of view
                         if math.isclose(self.head.view, Head.VIEW_RNG, abs_tol=1):
+                            print('Done')
                             return True
 
                     # Too left
@@ -287,21 +332,31 @@ class Robot(Component):
 
                         if tDist > ik.S_LEN + ik.E_LEN:
                             self.body.move(self.CLOSE_MOVE_TIME, Direction.FORWARD)
-                            print('too far')
+                            print('forward')
                         elif tDist < ik.E_LEN - ik.S_LEN:
                             self.body.move(self.CLOSE_MOVE_TIME, Direction.BACKWARD)
-                            print('too close')
+                            print('backward')
                         else:
                             shoulderAngle, elbowAngle = ik.calcAngles(objPos)
                             if (Arm.SHOULDER_MIN_DOM <= shoulderAngle <= Arm.SHOULDER_MAX_DOM) and (Arm.ELBOW_MIN_DOM <= elbowAngle <= Arm.ELBOW_MAX_DOM):
+                                print('Done')
                                 return True
                             else:
                                 self.body.move(self.CLOSE_MOVE_TIME, Direction.FORWARD)
-                                print('dunno, move closer')
+                                print('forward')
 
                 else:
-                    print('lost')
-                    return False
+                    print('searching')
+                    if time.time() - searchStart > timeLim:
+                        return False
+
+                    self.body.move(self.CLOSE_MOVE_TIME, Direction.BACKWARD)
+                    if searchLeft:
+                        self.body.move(self.CLOSE_MOVE_TIME, Direction.LEFT)
+                        searchLeft = False
+                    else:
+                        self.body.move(self.FAR_MOVE_TIME, Direction.RIGHT)
+                        searchLeft = True
 
                 # readjust the camera
                 time.sleep(self.CLOSE_REF_TIME)

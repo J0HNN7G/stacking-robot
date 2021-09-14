@@ -161,7 +161,44 @@ class Head(Component):
         return round(x, self.PRECISION), round(y, self.PRECISION)
 
 
-    def allObjCamProp(self, numOfChecks):
+    def objCamProp(self, entity, numOfChecks=10):
+        """
+        Get the properties of a block in view.
+
+        :param entity: the object being observed
+        :param numOfChecks: number of times that the object properties
+                            are measured.
+        """
+        with PiCamera() as camera:
+            camera.resolution = (self.IMG_WIDTH, self.IMG_HEIGHT)
+            camera.start_preview()
+            time.sleep(1)
+
+            objs = []
+
+            for i in range(numOfChecks):
+                with io.BytesIO() as stream:
+                    camera.capture(stream, format='jpeg')
+                    data = np.fromstring(stream.getvalue(), dtype=np.uint8)
+
+                    img = cv2.imdecode(data, 1)
+                    hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+
+                    colMask = colourMask(hsv, entity)
+                    obj = findObjProp(colMask)
+                    if obj:
+                        objs.append(obj)
+
+            camera.stop_preview()
+
+        meanObj = None
+        if objs:
+            meanObj = meanObjProps(objs)
+
+        return meanObj
+
+
+    def allObjCamProp(self, numOfChecks=10):
         """
         Get the properties of all blocks in camera view.
 
