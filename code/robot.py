@@ -50,7 +50,7 @@ class Robot(Component):
     FAR_VIEW_DIFF = 5
 
     # Readjustment period for camera after search movement for faraway search.
-    FAR_REF_TIME = 1
+    FAR_REF_TIME = 0.5
 
     # The divisor of image width or height in pixels to determine
     # if object is within center view for faraway find.
@@ -65,9 +65,6 @@ class Robot(Component):
 
     # Readjustment period for camera after search movement for faraway search.
     CLOSE_REF_TIME = 1
-
-    # Minimum number of tries for search pickup.
-    MIN_NUM_TRIES = 3
 
 
     def __init__(self, head, body, arm):
@@ -106,7 +103,7 @@ class Robot(Component):
         self.status = False
 
 
-    def searchPickup(self, entity, numTries = 5):
+    def searchPickup(self, entity):
         """
         Pickup an object far away from the robot and/or behind it.
 
@@ -115,33 +112,13 @@ class Robot(Component):
         """
         error.checkComponent(self, 'Robot')
         error.checkType(entity, Entity, 'entity', 'Entity')
-        error.checkInRange(numTries, self.MIN_NUM_TRIES, math.inf)
-
+        
         farFound = self.farFind(entity)
-        tryCount = 1
-        while not farFound:
-            farFound = self.farFind(entity)
-            tryCount += 1
-            if tryCount == numTries:
-                return False
-
-        tryCount += 1
+        time.sleep(5)
         closeFound = self.closeFind(entity)
-        while not closeFound:
-            closeFound = self.closeFind(entity)
-            tryCount += 1
-            if tryCount == numTries:
-                return False
-
-        tryCount += 1
+        time.sleep(5)
         pickupDone = self.pickup(entity)
-        while not pickupDone:
-            pickupDone = self.pickup(entity)
-            tryCount += 1
-            if tryCount == numTries:
-                return False
-
-        return True
+        return pickupDone
 
 
     def pickup(self, entity):
@@ -278,7 +255,7 @@ class Robot(Component):
                 rawCapture.truncate(0)
 
 
-    def closeFind(self, entity, timeLim = 10):
+    def closeFind(self, entity, timeLim = 15):
         error.checkComponent(self, 'Robot')
         error.checkType(entity, Entity, 'entity', 'Entity')
 
