@@ -2,7 +2,7 @@
  <img src="/doc/Stack Boy.jpg" width="275" height="200" >
 </p> 
 
-A software package for the Adeept RaspTank to autonomously search and pickup red, green and blue blocks.
+A python package for the Adeept RaspTank to autonomously search and pickup red, green and blue blocks.
 
 - [See Autonomous Pickup](https://youtu.be/UzkImDa47CQ)
 
