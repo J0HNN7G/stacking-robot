@@ -4,6 +4,6 @@
 
 # Robot Go Brrr
 
-[![Autonomous Search and Pickup]({image-url})]({video-url} "Search and Pickup")
+[![Autonomous pickup]({https://github.com/J0HNN7G/stack_boy/blob/main/doc/Stack%20Boy.jpg})]({https://youtu.be/UzkImDa47CQ} "Search and Pickup")
 
 A software package for the Adeept RaspTank to stack coloured blocks.
