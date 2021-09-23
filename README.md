@@ -2,8 +2,17 @@
  <img src="/doc/Stack Boy.jpg" width="275" height="200" >
 </p> 
 
-# Robot Go Brrr
+A software package for the Adeept RaspTank to autonomously search and pickup red, green and blue blocks.
 
-[![Autonomous pickup]({https://github.com/J0HNN7G/stack_boy/blob/main/doc/Stack%20Boy.jpg})]({https://youtu.be/UzkImDa47CQ} "Search and Pickup")
+- [See Autonomous Pickup](https://youtu.be/UzkImDa47CQ)
 
-A software package for the Adeept RaspTank to stack coloured blocks.
+- [See Adeept RaspTank](https://www.adeept.com/adeept-rasptank-wifi-wireless-smart-robot-car-kit-for-raspberry-pi-4-3-model-b-b-tank-tracked-robot-with-4-dof-robotic-arm-opencv-target-tracking_p0121.html)
+
+
+### TODO
+
+- [ ] Drop action
+- [ ] Stack action
+- [x] PDDL framework for stacking blocks
+- [ ] PDDL Planner
+- [ ] Infer start state from camera
